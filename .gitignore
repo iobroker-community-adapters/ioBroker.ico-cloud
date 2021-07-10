@@ -1,5 +1,6 @@
 .git
 .idea
+.cache
 *.code-workspace
 node_modules
 nbproject
