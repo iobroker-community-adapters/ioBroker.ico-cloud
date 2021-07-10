@@ -79324,7 +79324,7 @@ function (_super) {
   Settings.prototype.render = function () {
     return react_1.default.createElement("form", {
       className: this.props.classes.tab
-    }, this.renderCheckbox("option1", "option1"), react_1.default.createElement("br", null), this.renderInput("option2", "option2", "text"));
+    }, this.renderInput("labelPollinterval", "pollinterval", "number"));
   };
 
   return Settings;
@@ -79334,14 +79334,12 @@ exports.default = styles_1.withStyles(styles)(Settings);
 },{"react":"../../node_modules/react/index.js","@material-ui/core/styles":"../../node_modules/@material-ui/core/esm/styles/index.js","@material-ui/core/TextField":"../../node_modules/@material-ui/core/esm/TextField/index.js","@material-ui/core/Input":"../../node_modules/@material-ui/core/esm/Input/index.js","@material-ui/core/FormHelperText":"../../node_modules/@material-ui/core/esm/FormHelperText/index.js","@material-ui/core/FormControl":"../../node_modules/@material-ui/core/esm/FormControl/index.js","@material-ui/core/Select":"../../node_modules/@material-ui/core/esm/Select/index.js","@material-ui/core/MenuItem":"../../node_modules/@material-ui/core/esm/MenuItem/index.js","@material-ui/core/FormControlLabel":"../../node_modules/@material-ui/core/esm/FormControlLabel/index.js","@material-ui/core/Checkbox":"../../node_modules/@material-ui/core/esm/Checkbox/index.js","@iobroker/adapter-react/i18n":"../../node_modules/@iobroker/adapter-react/i18n.js"}],"i18n/en.json":[function(require,module,exports) {
 module.exports = {
   "ico adapter settings": "Adapter settings for ico",
-  "option1": "option1",
-  "option2": "option2"
+  "labelPollinterval": "Pollinterval (in minutes)"
 };
 },{}],"i18n/de.json":[function(require,module,exports) {
 module.exports = {
   "ico adapter settings": "Adaptereinstellungen für ico",
-  "option1": "Option 1",
-  "option2": "Option 2"
+  "labelPollinterval": "Frage Zustand alle x Minuten ab"
 };
 },{}],"i18n/ru.json":[function(require,module,exports) {
 module.exports = {
