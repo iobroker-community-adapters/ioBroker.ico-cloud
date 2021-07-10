@@ -1,0 +1,79 @@
+{
+    "common": {
+        "name": "ico",
+        "version": "0.0.1",
+        "news": {
+            "0.0.1": {
+                "en": "initial release",
+                "de": "Erstveröffentlichung",
+                "ru": "Начальная версия",
+                "pt": "lançamento inicial",
+                "nl": "Eerste uitgave",
+                "fr": "Première version",
+                "it": "Versione iniziale",
+                "es": "Versión inicial",
+                "pl": "Pierwsze wydanie",
+                "zh-cn": "首次出版"
+            }
+        },
+        "titleLang": {
+            "en": "ICO Poolsensor",
+            "de": "ICO Poolsensor",
+            "ru": "ICO Poolsensor",
+            "pt": "ICO Poolsensor",
+            "nl": "ICO Poolsensor",
+            "fr": "Capteur de piscine ICO",
+            "it": "ICO Poolsensor",
+            "es": "Sensor de piscina ICO",
+            "pl": "Czujnik puli ICO",
+            "zh-cn": "ICO池传感器"
+        },
+        "desc": {
+            "en": "ICO Poolsensor allow to monitor the state of the water in your pool and recommends actions to take.",
+            "de": "ICO Poolsensor ermöglicht die Überwachung des Wasserzustands in Ihrem Pool und empfiehlt Maßnahmen.",
+            "ru": "ICO Poolsensor позволяет отслеживать состояние воды в вашем бассейне и рекомендует действия, которые необходимо предпринять.",
+            "pt": "ICO Poolsensor permite monitorar o estado da água em sua piscina e recomenda ações a serem tomadas.",
+            "nl": "Met ICO Poolsensor kan de toestand van het water in uw zwembad worden gecontroleerd en worden acties aanbevolen.",
+            "fr": "ICO Poolsensor permet de surveiller l'état de l'eau de votre piscine et vous recommande les actions à entreprendre.",
+            "it": "ICO Poolsensor consente di monitorare lo stato dell'acqua nella tua piscina e consiglia le azioni da intraprendere.",
+            "es": "ICO Poolsensor permite controlar el estado del agua en su piscina y recomienda acciones a tomar.",
+            "pl": "ICO Poolsensor pozwala monitorować stan wody w Twoim basenie i rekomenduje działania, które należy podjąć.",
+            "zh-cn": "ICO Poolsensor 允许监控池中水的状态并建议采取的措施。"
+        },
+        "authors": [
+            "Garfonso <garfonso@mobo.info>"
+        ],
+        "keywords": [
+            "pool",
+            "ico",
+            "ondilo",
+            "spa",
+            "water"
+        ],
+        "license": "MIT",
+        "platform": "Javascript/Node.js",
+        "main": "build/main.js",
+        "icon": "ico.png",
+        "enabled": true,
+        "extIcon": "https://raw.githubusercontent.com/iobroker-community-adapters/ioBroker.ico/master/admin/ico.png",
+        "readme": "https://github.com/iobroker-community-adapters/ioBroker.ico/blob/master/README.md",
+        "loglevel": "info",
+        "mode": "daemon",
+        "type": "metering",
+        "compact": true,
+        "connectionType": "cloud",
+        "dataSource": "poll",
+        "materialize": true,
+        "dependencies": [
+            {
+                "js-controller": ">=2.0.0"
+            }
+        ]
+    },
+    "native": {
+        "option1": true,
+        "option2": "42"
+    },
+    "objects": [],
+    "instanceObjects": []
+}
