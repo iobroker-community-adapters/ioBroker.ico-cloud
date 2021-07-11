@@ -1,10 +1,10 @@
-import React from "react";
-import { Theme, withStyles } from "@material-ui/core/styles";
+import React from 'react';
+import { Theme, withStyles } from '@material-ui/core/styles';
 
-import GenericApp from "@iobroker/adapter-react/GenericApp";
-import Settings from "./components/settings";
-import { GenericAppProps, GenericAppSettings } from "@iobroker/adapter-react/types";
-import { StyleRules } from "@material-ui/core/styles";
+import GenericApp from '@iobroker/adapter-react/GenericApp';
+import Settings from './components/settings';
+import { GenericAppProps, GenericAppSettings } from '@iobroker/adapter-react/types';
+import { StyleRules } from '@material-ui/core/styles';
 
 const styles = (_theme: Theme): StyleRules => ({
     root: {},
@@ -14,7 +14,7 @@ class App extends GenericApp {
     constructor(props: GenericAppProps) {
         const extendedProps: GenericAppSettings = {
             ...props,
-            encryptedFields: [],
+            encryptedFields: ['refreshToken', 'accessToken'],
             translations: {
                 "en": require("./i18n/en.json"),
                 "de": require("./i18n/de.json"),

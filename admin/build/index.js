@@ -79886,17 +79886,17 @@ function (_super) {
         paddingTop: 5
       }, style)
     }, react_1.default.createElement(Select_1.default, {
-      value: this.props.native[attr] || "_",
+      value: this.props.native[attr] || '_',
       onChange: function onChange(e) {
         return _this.props.onChange(attr, e.target.value === "_" ? "" : e.target.value);
       },
       input: react_1.default.createElement(Input_1.default, {
         name: attr,
-        id: attr + "-helper"
+        id: attr + '-helper'
       })
     }, options.map(function (item) {
       return react_1.default.createElement(MenuItem_1.default, {
-        key: "key-" + item.value,
+        key: 'key-' + item.value,
         value: item.value || "_"
       }, i18n_1.default.t(item.title));
     })), react_1.default.createElement(FormHelperText_1.default, null, i18n_1.default.t(title)));
@@ -80173,7 +80173,7 @@ function (_super) {
     var _this = this;
 
     var extendedProps = __assign(__assign({}, props), {
-      encryptedFields: [],
+      encryptedFields: ['refreshToken', 'accessToken'],
       translations: {
         "en": require("./i18n/en.json"),
         "de": require("./i18n/de.json"),
@@ -80284,7 +80284,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50620" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "56878" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

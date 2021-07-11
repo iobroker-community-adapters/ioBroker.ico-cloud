@@ -32,12 +32,10 @@ class Ico extends utils.Adapter {
         // The adapters config (in the instance object everything under the attribute "native") is accessible via
         // this.config:
         this.log.info('Configured pollinterval: ' + this.config.pollinterval);
-        this.log.info('Code: ' + this.config.code);
+        this.log.info('refreshToken: ' + this.config.refreshToken);
 
-        if (this.config.code) {
-            const code = this.decrypt(this.config.code);
-
-
+        if (this.config.refreshToken) {
+            
         } else {
             this.log.info('Not authorized, yet. Please see configuration.');
         }

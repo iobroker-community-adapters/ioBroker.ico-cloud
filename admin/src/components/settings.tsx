@@ -91,12 +91,12 @@ class Settings extends React.Component<SettingsProps, SettingsState> {
                 }}
             >
                 <Select
-                    value={this.props.native[attr] || "_"}
+                    value={this.props.native[attr] || '_'}
                     onChange={(e) => this.props.onChange(attr, e.target.value === "_" ? "" : e.target.value)}
-                    input={<Input name={attr} id={attr + "-helper"} />}
+                    input={<Input name={attr} id={attr + '-helper'} />}
                 >
                     {options.map((item) => (
-                        <MenuItem key={"key-" + item.value} value={item.value || "_"}>
+                        <MenuItem key={'key-' + item.value} value={item.value || "_"}>
                             {I18n.t(item.title)}
                         </MenuItem>
                     ))}

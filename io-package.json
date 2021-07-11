@@ -64,7 +64,6 @@
         "connectionType": "cloud",
         "dataSource": "poll",
         "materialize": true,
-        "encryptedNative": ["refreshToken", "accessToken"],
         "dependencies": [
             {
                 "js-controller": ">=2.0.0"
@@ -76,6 +75,7 @@
         "refreshToken": "",
         "accessToken": ""
     },
+    "encryptedNative": ["refreshToken", "accessToken"],
     "objects": [],
     "instanceObjects": []
 }
