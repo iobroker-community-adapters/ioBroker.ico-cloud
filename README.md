@@ -13,7 +13,9 @@
 
 ## ico adapter for ioBroker
 
-ICO Poolsensor allow to monitor the state of the water in your pool and recommends actions to take.
+ICO Poolsensors allow to monitor the state of the water in your pool and recommend actions to take.
+
+Nothing here, yet. Watch forum for test announcement.
 
 ## Developer manual
 This section is intended for the developer. It can be deleted later

@@ -79135,7 +79135,463 @@ Object.defineProperty(exports, "default", {
 var _Checkbox = _interopRequireDefault(require("./Checkbox"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-},{"./Checkbox":"../../node_modules/@material-ui/core/esm/Checkbox/Checkbox.js"}],"components/settings.tsx":[function(require,module,exports) {
+},{"./Checkbox":"../../node_modules/@material-ui/core/esm/Checkbox/Checkbox.js"}],"../../node_modules/react-simple-oauth2-login/dist/utils.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.toParams = toParams;
+exports.toQuery = toQuery;
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function _iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Symbol !== "undefined" && arr[Symbol.iterator] || arr["@@iterator"]; if (_i == null) return; var _arr = []; var _n = true; var _d = false; var _s, _e; try { for (_i = _i.call(arr); !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+function toParams(query) {
+  var q = query.replace(/^(\?|#)/, '');
+  return q.split('&').reduce(function (values, param) {
+    var _param$split = param.split('='),
+        _param$split2 = _slicedToArray(_param$split, 2),
+        key = _param$split2[0],
+        value = _param$split2[1];
+
+    return _objectSpread(_objectSpread({}, values), {}, _defineProperty({}, key, decodeURIComponent(value)));
+  }, {});
+}
+
+function toQuery(params) {
+  var delimiter = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '&';
+  var keys = Object.keys(params);
+  return keys.reduce(function (str, key, index) {
+    var query = "".concat(str).concat(key, "=").concat(params[key]);
+
+    if (index < keys.length - 1) {
+      query += delimiter;
+    }
+
+    return query;
+  }, '');
+}
+},{}],"../../node_modules/react-simple-oauth2-login/dist/PopupWindow.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports["default"] = void 0;
+
+var _utils = require("./utils");
+
+function _construct(Parent, args, Class) { if (_isNativeReflectConstruct()) { _construct = Reflect.construct; } else { _construct = function _construct(Parent, args, Class) { var a = [null]; a.push.apply(a, args); var Constructor = Function.bind.apply(Parent, a); var instance = new Constructor(); if (Class) _setPrototypeOf(instance, Class.prototype); return instance; }; } return _construct.apply(null, arguments); }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var PopupWindow = /*#__PURE__*/function () {
+  function PopupWindow(id, url) {
+    var popupOptions = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+    var otherOptions = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
+
+    _classCallCheck(this, PopupWindow);
+
+    this.id = id;
+    this.url = url;
+    this.popupOptions = popupOptions;
+    this.locationKey = otherOptions.locationKey;
+    this.isCrossOrigin = otherOptions.isCrossOrigin;
+    this.response = null;
+    this.handlePostMessage = this.handlePostMessage.bind(this);
+  }
+
+  _createClass(PopupWindow, [{
+    key: "handlePostMessage",
+    value: function handlePostMessage(event) {
+      if (event.data.message === 'deliverResult') {
+        this.response = event.data.result;
+      }
+    }
+  }, {
+    key: "open",
+    value: function open() {
+      var url = this.url,
+          id = this.id,
+          popupOptions = this.popupOptions,
+          isCrossOrigin = this.isCrossOrigin;
+
+      if (isCrossOrigin) {
+        window.addEventListener('message', this.handlePostMessage);
+      }
+
+      this.window = window.open(url, id, (0, _utils.toQuery)(popupOptions, ','));
+    }
+  }, {
+    key: "close",
+    value: function close() {
+      this.cancel();
+      this.window.close();
+      window.removeEventListener('message', this.handlePostMessage);
+    }
+  }, {
+    key: "poll",
+    value: function poll() {
+      var _this = this;
+
+      this.promise = new Promise(function (resolve, reject) {
+        _this.iid = window.setInterval(function () {
+          try {
+            var popup = _this.window;
+
+            if (!popup || popup.closed !== false) {
+              _this.close();
+
+              reject(new Error('The popup was closed for an unexpected reason'));
+              return;
+            } // Cross origin auth flows need to be handled differently
+
+
+            if (_this.isCrossOrigin) {
+              if (_this.response) {
+                resolve(_this.response);
+
+                _this.close();
+              } else {
+                popup.postMessage({
+                  message: 'requestResult'
+                }, '*');
+                return;
+              }
+            } else {
+              if (popup.location.href === _this.url || popup.location.pathname === 'blank') {
+                // location unchanged, still polling
+                return;
+              }
+
+              if (!['search', 'hash'].includes(_this.locationKey)) {
+                reject(new Error("Cannot get data from location.".concat(_this.locationKey, ", check the responseType prop")));
+
+                _this.close();
+
+                return;
+              }
+
+              var locationValue = popup.location[_this.locationKey];
+              var params = (0, _utils.toParams)(locationValue);
+              resolve(params);
+
+              _this.close();
+            }
+          } catch (error) {
+            // Log the error to the console but remain silent
+            if (error.name === 'SecurityError' && error.message.includes('Blocked a frame with origin')) {
+              console.warn('Encountered a cross-origin error, is your authorization URL on a different server? Use the "isCrossOrigin" property, see documentation for details.');
+            } else {
+              console.error(error);
+            }
+          }
+        }, 500);
+      });
+    }
+  }, {
+    key: "cancel",
+    value: function cancel() {
+      if (this.iid) {
+        window.clearInterval(this.iid);
+        this.iid = null;
+      }
+    }
+  }, {
+    key: "then",
+    value: function then() {
+      var _this$promise;
+
+      return (_this$promise = this.promise).then.apply(_this$promise, arguments);
+    }
+  }, {
+    key: "catch",
+    value: function _catch() {
+      var _this$promise2;
+
+      return (_this$promise2 = this.promise)["catch"].apply(_this$promise2, arguments);
+    }
+  }], [{
+    key: "open",
+    value: function open() {
+      for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+        args[_key] = arguments[_key];
+      }
+
+      var popup = _construct(this, args);
+
+      popup.open();
+      popup.poll();
+      return popup;
+    }
+  }]);
+
+  return PopupWindow;
+}();
+
+var _default = PopupWindow;
+exports["default"] = _default;
+},{"./utils":"../../node_modules/react-simple-oauth2-login/dist/utils.js"}],"../../node_modules/react-simple-oauth2-login/dist/OAuth2Login.js":[function(require,module,exports) {
+"use strict";
+
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports["default"] = void 0;
+
+var _react = _interopRequireWildcard(require("react"));
+
+var _propTypes = _interopRequireDefault(require("prop-types"));
+
+var _PopupWindow = _interopRequireDefault(require("./PopupWindow"));
+
+var _utils = require("./utils");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+
+function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
+
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+
+function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+var responseTypeLocationKeys = {
+  code: 'search',
+  token: 'hash'
+};
+var responseTypeDataKeys = {
+  code: 'code',
+  token: 'access_token'
+};
+
+var OAuth2Login = /*#__PURE__*/function (_Component) {
+  _inherits(OAuth2Login, _Component);
+
+  var _super = _createSuper(OAuth2Login);
+
+  function OAuth2Login(props) {
+    var _this;
+
+    _classCallCheck(this, OAuth2Login);
+
+    _this = _super.call(this, props);
+    _this.onBtnClick = _this.onBtnClick.bind(_assertThisInitialized(_this));
+    _this.onRequest = _this.onRequest.bind(_assertThisInitialized(_this));
+    _this.onSuccess = _this.onSuccess.bind(_assertThisInitialized(_this));
+    _this.onFailure = _this.onFailure.bind(_assertThisInitialized(_this));
+    return _this;
+  }
+
+  _createClass(OAuth2Login, [{
+    key: "onBtnClick",
+    value: function onBtnClick() {
+      var _this$props = this.props,
+          buttonText = _this$props.buttonText,
+          authorizationUrl = _this$props.authorizationUrl,
+          clientId = _this$props.clientId,
+          scope = _this$props.scope,
+          redirectUri = _this$props.redirectUri,
+          state = _this$props.state,
+          responseType = _this$props.responseType,
+          popupWidth = _this$props.popupWidth,
+          popupHeight = _this$props.popupHeight,
+          isCrossOrigin = _this$props.isCrossOrigin;
+      var payload = {
+        client_id: clientId,
+        scope: scope,
+        redirect_uri: redirectUri,
+        response_type: responseType
+      };
+
+      if (state) {
+        payload.state = state;
+      }
+
+      var search = (0, _utils.toQuery)(payload);
+      var width = popupWidth;
+      var height = popupHeight;
+      var left = window.screenX + (window.outerWidth - width) / 2;
+      var top = window.screenY + (window.outerHeight - height) / 2.5;
+      var locationKey = responseTypeLocationKeys[responseType];
+
+      var popup = _PopupWindow["default"].open(buttonText, "".concat(authorizationUrl, "?").concat(search), {
+        height: height,
+        width: width,
+        top: top,
+        left: left
+      }, {
+        locationKey: locationKey,
+        isCrossOrigin: isCrossOrigin
+      });
+
+      this.popup = popup;
+      this.onRequest();
+      popup.then(this.onSuccess)["catch"](this.onFailure);
+    }
+  }, {
+    key: "onRequest",
+    value: function onRequest() {
+      var onRequest = this.props.onRequest;
+      onRequest();
+    }
+  }, {
+    key: "onSuccess",
+    value: function onSuccess(data) {
+      var _this$props2 = this.props,
+          responseType = _this$props2.responseType,
+          onSuccess = _this$props2.onSuccess,
+          isCrossOrigin = _this$props2.isCrossOrigin;
+      var responseKey = responseTypeDataKeys[responseType]; // Cross origin requests will already handle this, let's just return the data
+
+      if (!isCrossOrigin && !data[responseKey]) {
+        console.error('received data', data);
+        return this.onFailure(new Error("'".concat(responseKey, "' not found in received data")));
+      }
+
+      return onSuccess(data);
+    }
+  }, {
+    key: "onFailure",
+    value: function onFailure(error) {
+      var onFailure = this.props.onFailure;
+      onFailure(error);
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      var _this$props3 = this.props,
+          id = _this$props3.id,
+          className = _this$props3.className,
+          buttonText = _this$props3.buttonText,
+          children = _this$props3.children,
+          render = _this$props3.render;
+
+      if (render) {
+        return render({
+          className: className,
+          buttonText: buttonText,
+          children: children,
+          onClick: this.onBtnClick
+        });
+      }
+
+      var attrs = {
+        onClick: this.onBtnClick
+      };
+
+      if (id) {
+        attrs.id = id;
+      }
+
+      if (className) {
+        attrs.className = className;
+      } // eslint-disable-next-line react/jsx-props-no-spreading
+
+
+      return /*#__PURE__*/_react["default"].createElement("button", _extends({
+        type: "button"
+      }, attrs), children || buttonText);
+    }
+  }]);
+
+  return OAuth2Login;
+}(_react.Component);
+
+OAuth2Login.defaultProps = {
+  id: undefined,
+  buttonText: 'Login',
+  scope: '',
+  state: '',
+  className: '',
+  children: null,
+  popupWidth: 680,
+  popupHeight: 680,
+  render: null,
+  isCrossOrigin: false,
+  onRequest: function onRequest() {}
+};
+OAuth2Login.propTypes = {
+  id: _propTypes["default"].string,
+  authorizationUrl: _propTypes["default"].string.isRequired,
+  clientId: _propTypes["default"].string.isRequired,
+  redirectUri: _propTypes["default"].string.isRequired,
+  responseType: _propTypes["default"].oneOf(['code', 'token']).isRequired,
+  onSuccess: _propTypes["default"].func.isRequired,
+  onFailure: _propTypes["default"].func.isRequired,
+  buttonText: _propTypes["default"].string,
+  children: _propTypes["default"].node,
+  popupWidth: _propTypes["default"].number,
+  popupHeight: _propTypes["default"].number,
+  className: _propTypes["default"].string,
+  render: _propTypes["default"].func,
+  isCrossOrigin: _propTypes["default"].bool,
+  onRequest: _propTypes["default"].func,
+  scope: _propTypes["default"].string,
+  state: _propTypes["default"].string
+};
+var _default = OAuth2Login;
+exports["default"] = _default;
+},{"react":"../../node_modules/react/index.js","prop-types":"../../node_modules/prop-types/index.js","./PopupWindow":"../../node_modules/react-simple-oauth2-login/dist/PopupWindow.js","./utils":"../../node_modules/react-simple-oauth2-login/dist/utils.js"}],"../../node_modules/react-simple-oauth2-login/dist/index.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports["default"] = void 0;
+
+var _OAuth2Login = _interopRequireDefault(require("./OAuth2Login"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+
+var _default = _OAuth2Login["default"];
+exports["default"] = _default;
+},{"./OAuth2Login":"../../node_modules/react-simple-oauth2-login/dist/OAuth2Login.js"}],"components/settings.tsx":[function(require,module,exports) {
 "use strict";
 
 var __extends = this && this.__extends || function () {
@@ -79182,6 +79638,149 @@ var __assign = this && this.__assign || function () {
   return __assign.apply(this, arguments);
 };
 
+var __awaiter = this && this.__awaiter || function (thisArg, _arguments, P, generator) {
+  function adopt(value) {
+    return value instanceof P ? value : new P(function (resolve) {
+      resolve(value);
+    });
+  }
+
+  return new (P || (P = Promise))(function (resolve, reject) {
+    function fulfilled(value) {
+      try {
+        step(generator.next(value));
+      } catch (e) {
+        reject(e);
+      }
+    }
+
+    function rejected(value) {
+      try {
+        step(generator["throw"](value));
+      } catch (e) {
+        reject(e);
+      }
+    }
+
+    function step(result) {
+      result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
+    }
+
+    step((generator = generator.apply(thisArg, _arguments || [])).next());
+  });
+};
+
+var __generator = this && this.__generator || function (thisArg, body) {
+  var _ = {
+    label: 0,
+    sent: function sent() {
+      if (t[0] & 1) throw t[1];
+      return t[1];
+    },
+    trys: [],
+    ops: []
+  },
+      f,
+      y,
+      t,
+      g;
+  return g = {
+    next: verb(0),
+    "throw": verb(1),
+    "return": verb(2)
+  }, typeof Symbol === "function" && (g[Symbol.iterator] = function () {
+    return this;
+  }), g;
+
+  function verb(n) {
+    return function (v) {
+      return step([n, v]);
+    };
+  }
+
+  function step(op) {
+    if (f) throw new TypeError("Generator is already executing.");
+
+    while (_) {
+      try {
+        if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
+        if (y = 0, t) op = [op[0] & 2, t.value];
+
+        switch (op[0]) {
+          case 0:
+          case 1:
+            t = op;
+            break;
+
+          case 4:
+            _.label++;
+            return {
+              value: op[1],
+              done: false
+            };
+
+          case 5:
+            _.label++;
+            y = op[1];
+            op = [0];
+            continue;
+
+          case 7:
+            op = _.ops.pop();
+
+            _.trys.pop();
+
+            continue;
+
+          default:
+            if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) {
+              _ = 0;
+              continue;
+            }
+
+            if (op[0] === 3 && (!t || op[1] > t[0] && op[1] < t[3])) {
+              _.label = op[1];
+              break;
+            }
+
+            if (op[0] === 6 && _.label < t[1]) {
+              _.label = t[1];
+              t = op;
+              break;
+            }
+
+            if (t && _.label < t[2]) {
+              _.label = t[2];
+
+              _.ops.push(op);
+
+              break;
+            }
+
+            if (t[2]) _.ops.pop();
+
+            _.trys.pop();
+
+            continue;
+        }
+
+        op = body.call(thisArg, _);
+      } catch (e) {
+        op = [6, e];
+        y = 0;
+      } finally {
+        f = t = 0;
+      }
+    }
+
+    if (op[0] & 5) throw op[1];
+    return {
+      value: op[0] ? op[1] : void 0,
+      done: true
+    };
+  }
+};
+
 var __importDefault = this && this.__importDefault || function (mod) {
   return mod && mod.__esModule ? mod : {
     "default": mod
@@ -79214,6 +79813,8 @@ var Checkbox_1 = __importDefault(require("@material-ui/core/Checkbox"));
 
 var i18n_1 = __importDefault(require("@iobroker/adapter-react/i18n"));
 
+var react_simple_oauth2_login_1 = __importDefault(require("react-simple-oauth2-login"));
+
 var styles = function styles() {
   return {
     input: {
@@ -79225,14 +79826,14 @@ var styles = function styles() {
     },
     card: {
       maxWidth: 345,
-      textAlign: "center"
+      textAlign: 'center'
     },
     media: {
       height: 180
     },
     column: {
-      display: "inline-block",
-      verticalAlign: "top",
+      display: 'inline-block',
+      verticalAlign: 'top',
       marginRight: 20
     },
     columnLogo: {
@@ -79240,7 +79841,7 @@ var styles = function styles() {
       marginRight: 0
     },
     columnSettings: {
-      width: "calc(100% - 370px)"
+      width: 'calc(100% - 370px)'
     },
     controlElement: {
       //background: "#d2d2d2",
@@ -79268,7 +79869,7 @@ function (_super) {
       label: i18n_1.default.t(title),
       className: this.props.classes.input + " " + this.props.classes.controlElement,
       value: this.props.native[attr],
-      type: type || "text",
+      type: type || 'text',
       onChange: function onChange(e) {
         return _this.props.onChange(attr, e.target.value);
       },
@@ -79301,6 +79902,64 @@ function (_super) {
     })), react_1.default.createElement(FormHelperText_1.default, null, i18n_1.default.t(title)));
   };
 
+  Settings.prototype.onOauthSuccess = function (response) {
+    return __awaiter(this, void 0, void 0, function () {
+      var state, result, data;
+      return __generator(this, function (_a) {
+        switch (_a.label) {
+          case 0:
+            console.log(response);
+            state = localStorage.getItem('ioBroker.ico.state');
+            if (!(response.code && response.state === state)) return [3
+            /*break*/
+            , 3];
+            localStorage.removeItem('ioBroker.ico.state');
+            return [4
+            /*yield*/
+            , fetch('https://interop.ondilo.com/oauth2/token', {
+              method: 'POST',
+              mode: 'cors',
+              cache: 'no-cache',
+              body: "code=" + response.code + "&grant_type=authorization_code&client_id=customer_api&redirect_uri=" + encodeURIComponent(window.location.origin + '/'),
+              headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+              },
+              referrerPolicy: 'no-referrer',
+              redirect: 'follow'
+            })];
+
+          case 1:
+            result = _a.sent();
+            return [4
+            /*yield*/
+            , result.json()];
+
+          case 2:
+            data = _a.sent();
+            this.props.onChange('refreshToken', data.refresh_token);
+            this.props.onChange('accessToken', data.access_token);
+            return [3
+            /*break*/
+            , 4];
+
+          case 3:
+            console.warn('Supplied state did not match stored state.');
+            _a.label = 4;
+
+          case 4:
+            return [2
+            /*return*/
+            ];
+        }
+      });
+    });
+  };
+
+  Settings.prototype.onOauthFailure = function (response) {
+    console.log(response);
+    localStorage.removeItem('ioBroker.ico.state');
+  };
+
   Settings.prototype.renderCheckbox = function (title, attr, style) {
     var _this = this;
 
@@ -79322,24 +79981,69 @@ function (_super) {
   };
 
   Settings.prototype.render = function () {
+    var params = window.location.search; //got code -> get token.
+
+    if (params && params.includes('code=')) {
+      var code = void 0;
+      var match = false;
+      var kv = params.split('&').map(function (kv) {
+        return kv.split('=');
+      });
+
+      for (var _i = 0, kv_1 = kv; _i < kv_1.length; _i++) {
+        var _a = kv_1[_i],
+            key = _a[0],
+            value = _a[1];
+
+        if (key === 'code') {
+          code = value;
+        }
+
+        if (key === 'state') {
+          var oldState = localStorage.getItem('ioBroker.ico.state');
+          match = value === oldState;
+        }
+      }
+
+      if (match) {
+        this.props.onChange('code', code);
+        return react_1.default.createElement("div", null, i18n_1.default.t('labelSaveAndClose'));
+      } else {
+        console.log('Ignoring code for non matching state.');
+      }
+    }
+
+    var state = 'ioBroker.ico' + Date.now() * Math.random();
+    localStorage.setItem('ioBroker.ico.state', state);
     return react_1.default.createElement("form", {
       className: this.props.classes.tab
-    }, this.renderInput("labelPollinterval", "pollinterval", "number"));
+    }, this.renderInput('labelPollinterval', 'pollinterval', 'number'), react_1.default.createElement(react_simple_oauth2_login_1.default, {
+      authorizationUrl: "https://interop.ondilo.com/oauth2/authorize",
+      responseType: "code",
+      clientId: "customer_api",
+      redirectUri: window.location.origin + '/',
+      isCrossOrigin: false,
+      onSuccess: this.onOauthSuccess.bind(this),
+      onFailure: this.onOauthFailure.bind(this),
+      state: state
+    }));
   };
 
   return Settings;
 }(react_1.default.Component);
 
 exports.default = styles_1.withStyles(styles)(Settings);
-},{"react":"../../node_modules/react/index.js","@material-ui/core/styles":"../../node_modules/@material-ui/core/esm/styles/index.js","@material-ui/core/TextField":"../../node_modules/@material-ui/core/esm/TextField/index.js","@material-ui/core/Input":"../../node_modules/@material-ui/core/esm/Input/index.js","@material-ui/core/FormHelperText":"../../node_modules/@material-ui/core/esm/FormHelperText/index.js","@material-ui/core/FormControl":"../../node_modules/@material-ui/core/esm/FormControl/index.js","@material-ui/core/Select":"../../node_modules/@material-ui/core/esm/Select/index.js","@material-ui/core/MenuItem":"../../node_modules/@material-ui/core/esm/MenuItem/index.js","@material-ui/core/FormControlLabel":"../../node_modules/@material-ui/core/esm/FormControlLabel/index.js","@material-ui/core/Checkbox":"../../node_modules/@material-ui/core/esm/Checkbox/index.js","@iobroker/adapter-react/i18n":"../../node_modules/@iobroker/adapter-react/i18n.js"}],"i18n/en.json":[function(require,module,exports) {
+},{"react":"../../node_modules/react/index.js","@material-ui/core/styles":"../../node_modules/@material-ui/core/esm/styles/index.js","@material-ui/core/TextField":"../../node_modules/@material-ui/core/esm/TextField/index.js","@material-ui/core/Input":"../../node_modules/@material-ui/core/esm/Input/index.js","@material-ui/core/FormHelperText":"../../node_modules/@material-ui/core/esm/FormHelperText/index.js","@material-ui/core/FormControl":"../../node_modules/@material-ui/core/esm/FormControl/index.js","@material-ui/core/Select":"../../node_modules/@material-ui/core/esm/Select/index.js","@material-ui/core/MenuItem":"../../node_modules/@material-ui/core/esm/MenuItem/index.js","@material-ui/core/FormControlLabel":"../../node_modules/@material-ui/core/esm/FormControlLabel/index.js","@material-ui/core/Checkbox":"../../node_modules/@material-ui/core/esm/Checkbox/index.js","@iobroker/adapter-react/i18n":"../../node_modules/@iobroker/adapter-react/i18n.js","react-simple-oauth2-login":"../../node_modules/react-simple-oauth2-login/dist/index.js"}],"i18n/en.json":[function(require,module,exports) {
 module.exports = {
   "ico adapter settings": "Adapter settings for ico",
-  "labelPollinterval": "Pollinterval (in minutes)"
+  "labelPollinterval": "Pollinterval (in minutes)",
+  "labelSaveAndClose": "Received code. Please press Save button."
 };
 },{}],"i18n/de.json":[function(require,module,exports) {
 module.exports = {
   "ico adapter settings": "Adaptereinstellungen für ico",
-  "labelPollinterval": "Frage Zustand alle x Minuten ab"
+  "labelPollinterval": "Frage Zustand alle x Minuten ab",
+  "labelSaveAndClose": "Code erhalten. Bitte den Speichern Knopf drücken."
 };
 },{}],"i18n/ru.json":[function(require,module,exports) {
 module.exports = {
@@ -79580,7 +80284,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50802" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50620" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

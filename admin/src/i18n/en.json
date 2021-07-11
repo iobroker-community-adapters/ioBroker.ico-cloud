@@ -1,4 +1,5 @@
 {
     "ico adapter settings": "Adapter settings for ico",
-    "labelPollinterval": "Pollinterval (in minutes)"
+    "labelPollinterval": "Pollinterval (in minutes)",
+    "labelSaveAndClose": "Received code. Please press Save button."
 }
