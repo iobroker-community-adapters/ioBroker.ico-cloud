@@ -105,7 +105,6 @@ class Ico extends utils.Adapter {
                 if (!found) {
                     const id = this.namespace + '.' + icoDevice.uuid;
                     const deviceObj = <myDevice> {
-                        _id: id,
                         type: 'device',
                         common: {
                             name: <string> pool.name
@@ -135,19 +134,77 @@ class Ico extends utils.Adapter {
 
     private async createObjectForMeasurement(device: myDevice, type: PossibleTypes){
         let role = 'state';
+        let unit: string | undefined = undefined;
+        switch (type) {
+            case 'temperature': {
+                role = 'value.temperature';
+                unit = '°C';
+                break;
+            }
+            case 'ph': {
+                role = 'value.ph'
+                break;
+            }
+            case 'orp': {
+                role = 'value.orp';
+                unit = 'mV';
+                break;
+            }
+            case 'salt': {
+                role = 'value.salt';
+                unit = 'mg/L';
+                break;
+            }
+            case 'tds': {
+                role = 'value.tds';
+                unit = 'ppm';
+                break;
+            }
+            case 'battery': {
+                role = 'value.battery';
+                unit = '%';
+                await this.setObjectNotExistsAsync(device._id + '.lowBat', {
+                    type: 'state',
+                    common: {
+                        name: 'Low battery warning',
+                        role: 'indicator.lowbat',
+                        read: true,
+                        write: false
+                    },
+                    native: {}
+                });
+                break;
+            }
+            case 'rssi': {
+                role = 'value.rssi';
+                unit = '%';
+                await this.setObjectNotExistsAsync(device._id + '.offline', {
+                    type: 'state',
+                    common: {
+                        name: 'Low wifi signal',
+                        role: 'indicator.maintenance.unreach',
+                        read: true,
+                        write: false
+                    },
+                    native: {}
+                });
+                break;
+            }
+        }
+        const id = device._id + '.' + type;
         const stateObj = {
             type: 'state',
             common: {
                 name: type,
                 role: role,
                 read: true,
-                write: false
+                write: false,
+                unit: unit
             },
             native: {},
-            _id: device._id + '.' + type
         }
         device.native.hasObjects[type] = true;
-        await this.setObjectNotExistsAsync(stateObj._id, stateObj);
+        await this.setObjectNotExistsAsync(id, stateObj as ioBroker.StateObject);
     }
 
     private async updateMeasurementsOfDevice(device: myDevice){
@@ -158,11 +215,30 @@ class Ico extends utils.Adapter {
                 if (!device.native.hasObjects[measure.data_type]) {
                     await this.createObjectForMeasurement(device, measure.data_type);
                 }
-                await this.setStateAsync(device._id + '.' + measure.data_type, {
-                    val: measure.value,
-                    ack: true,
-                    ts: measure.value_time.getTime()
-                });
+                const currState = await this.getStateAsync(device._id + '.' + measure.data_type);
+                if (!currState || currState.ts < measure.value_time.getTime()) {
+                    await this.setStateAsync(device._id + '.' + measure.data_type, {
+                        val: measure.value,
+                        ack: true,
+                        ts: measure.value_time.getTime()
+                    });
+                    if (measure.data_type === 'battery') {
+                        await this.setStateChangedAsync(device._id + '.lowBat', {
+                            val: measure.value < 20, //TODO: evaluate or make configurable...
+                            ack: true,
+                            ts: measure.value_time.getTime()
+                        });
+                    }
+                    if (measure.data_type === 'rssi') {
+                        await this.setStateChangedAsync(device._id + '.offline', {
+                            val: measure.value < 5, //TODO: evaluate or make configurable...
+                            ack: true,
+                            ts: measure.value_time.getTime()
+                        });
+                    }
+                } else {
+                    this.log.debug(`Measurement for ${measure.data_type} was already recorded in state db.`);
+                }
             } else {
                 this.log.debug(`Did not read ${measure.data_type} for ${device.native.poolId} because ${measure.exclusion_reason}`);
             }
