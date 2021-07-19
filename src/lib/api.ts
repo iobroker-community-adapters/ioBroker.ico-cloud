@@ -124,12 +124,10 @@ export class Api {
         } catch (e: any | AxiosError) {
             if (axios.isAxiosError(e)) {
                 const response = (e as AxiosError).response || {status: 0, data: 'Unknown failure', headers: ''};
-                if (response.status === 401) {
-                    if (!triedRefresh) {
-                        const refreshWorked = await this.doRefreshToken();
-                        if (refreshWorked) {
-                            return this.requestInfo(urlPart, method, true);
-                        }
+                if (response.status === 401 && !triedRefresh) {
+                    const refreshWorked = await this.doRefreshToken();
+                    if (refreshWorked) {
+                        return this.requestInfo(urlPart, method, true);
                     }
                 } else {
                     this.log.warn(`API Error ${response.status} while getting ${urlPart}: ${response.data} - headers: ${response.headers}`);
