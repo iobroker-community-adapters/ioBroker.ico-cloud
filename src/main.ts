@@ -6,10 +6,23 @@
 // you need to create an adapter
 import * as utils from '@iobroker/adapter-core';
 
+import {Api, PossibleTypes} from './lib/api';
+
 // Load your modules here, e.g.:
 // import * as fs from "fs";
 
+interface myDevice extends ioBroker.DeviceObject {
+    native: {
+        poolId: number,
+        swVersion: string,
+        hasObjects: Record<string, boolean>
+    }
+}
+
 class Ico extends utils.Adapter {
+    private api?: Api;
+    private pollInterval = 0;
+    private devices: Array<myDevice> = [];
 
     public constructor(options: Partial<utils.AdapterOptions> = {}) {
         super({
@@ -35,10 +48,135 @@ class Ico extends utils.Adapter {
         this.log.info('refreshToken: ' + this.config.refreshToken);
 
         if (this.config.refreshToken) {
-            
+            this.api = new Api({
+                accessToken: this.config.accessToken,
+                refreshToken: this.config.refreshToken,
+                log: this.log
+            });
+
+            await this.updateDevices();
+
+            if (this.config.pollinterval) {
+                this.pollInterval = Math.max(1, this.config.pollinterval) * 60 * 1000; //convert from minutes to milliseconds.
+                setTimeout(this.poll, this.pollInterval);
+            }
         } else {
             this.log.info('Not authorized, yet. Please see configuration.');
         }
+    }
+
+    private async updateDevices(){
+        const devices = await this.getDevicesAsync();
+
+        const poolArray = await this.api!.getPools();
+        for (const pool of poolArray) {
+            if (pool.id) {
+                const icoDevice = await this.api!.getDevice(pool.id);
+
+                let found = false;
+                for (const device of devices) {
+                    const uuid = device._id.split('.').pop();
+                    if (uuid === icoDevice.uuid) {
+                        found = true;
+                        let needsUpdate = false;
+                        if (device.native.poolId !== pool.id) {
+                            needsUpdate = true;
+                            device.native.poolId = pool.id;
+                        }
+                        if (device.native.swVersion !== icoDevice.sw_version) {
+                            needsUpdate = true;
+                            device.native.swVersion = icoDevice.sw_version;
+                        }
+                        if (needsUpdate) {
+                            await this.setObjectAsync(device._id, device);
+                        }
+
+                        this.devices.push(<myDevice> device);
+                        //remove device from devices array:
+                        const index = devices.indexOf(device);
+                        if (index >= 0) {
+                            devices.splice(index, 1);
+                        }
+                        break;
+                    }
+                }
+
+                //create device from pool / device if necessary
+                if (!found) {
+                    const id = this.namespace + '.' + icoDevice.uuid;
+                    const deviceObj = <myDevice> {
+                        _id: id,
+                        type: 'device',
+                        common: {
+                            name: <string> pool.name
+                        },
+                        native: {
+                            poolId: <number> pool.id,
+                            swVersion: icoDevice.sw_version,
+                            hasObjects: {}
+                        }
+                    }
+                    this.devices.push(deviceObj);
+                    await this.setObjectAsync(id, deviceObj);
+                }
+            }
+        }
+
+        //if we still have devices, those are not in the cloud anymore -> remove.
+        for (const device of devices) {
+            await this.deleteDeviceAsync(device._id); //does this work as intended??
+            /*const objectsToDelete = await this.getObjectListAsync({startkey: device._id + '.', endkey: device._id + '.\u9999'});
+            const promises = [];
+            for (const obj of objectsToDelete) {
+                promises.push(this.delObjectAsync(obj._id));
+            }*/
+        }
+    }
+
+    private async createObjectForMeasurement(device: myDevice, type: PossibleTypes){
+        let role = 'state';
+        const stateObj = {
+            type: 'state',
+            common: {
+                name: type,
+                role: role,
+                read: true,
+                write: false
+            },
+            native: {},
+            _id: device._id + '.' + type
+        }
+        device.native.hasObjects[type] = true;
+        await this.setObjectNotExistsAsync(stateObj._id, stateObj);
+    }
+
+    private async updateMeasurementsOfDevice(device: myDevice){
+        const measures = await this.api!.getLastMeasures(device.native.poolId);
+        const promises: Array<Promise<any> > = [];
+        for (const measure of measures) {
+            if (measure.is_valid) {
+                if (!device.native.hasObjects[measure.data_type]) {
+                    await this.createObjectForMeasurement(device, measure.data_type);
+                }
+                await this.setStateAsync(device._id + '.' + measure.data_type, {
+                    val: measure.value,
+                    ack: true,
+                    ts: measure.value_time.getTime()
+                });
+            } else {
+                this.log.debug(`Did not read ${measure.data_type} for ${device.native.poolId} because ${measure.exclusion_reason}`);
+            }
+        }
+        await Promise.all(promises);
+    }
+
+    private async poll() {
+        const promises: Array<Promise<any> > = [];
+        for (const device of this.devices) {
+            promises.push(this.updateMeasurementsOfDevice(device));
+        }
+        await Promise.all(promises);
+        setTimeout(() => this.poll, this.pollInterval);
     }
 
     /**
