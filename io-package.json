@@ -17,28 +17,28 @@
             }
         },
         "titleLang": {
-            "en": "ICO Poolsensor",
+            "en": "ICO Pool sensor",
             "de": "ICO Poolsensor",
-            "ru": "ICO Poolsensor",
-            "pt": "ICO Poolsensor",
-            "nl": "ICO Poolsensor",
+            "ru": "Датчик пула ICO",
+            "pt": "Sensor ICO Pool",
+            "nl": "ICO Zwembadsensor",
             "fr": "Capteur de piscine ICO",
-            "it": "ICO Poolsensor",
+            "it": "Sensore piscina ICO",
             "es": "Sensor de piscina ICO",
-            "pl": "Czujnik puli ICO",
+            "pl": "Czujnik basenu ICO",
             "zh-cn": "ICO池传感器"
         },
         "desc": {
-            "en": "ICO Poolsensor allow to monitor the state of the water in your pool and recommends actions to take.",
-            "de": "ICO Poolsensor ermöglicht die Überwachung des Wasserzustands in Ihrem Pool und empfiehlt Maßnahmen.",
-            "ru": "ICO Poolsensor позволяет отслеживать состояние воды в вашем бассейне и рекомендует действия, которые необходимо предпринять.",
-            "pt": "ICO Poolsensor permite monitorar o estado da água em sua piscina e recomenda ações a serem tomadas.",
-            "nl": "Met ICO Poolsensor kan de toestand van het water in uw zwembad worden gecontroleerd en worden acties aanbevolen.",
-            "fr": "ICO Poolsensor permet de surveiller l'état de l'eau de votre piscine et vous recommande les actions à entreprendre.",
-            "it": "ICO Poolsensor consente di monitorare lo stato dell'acqua nella tua piscina e consiglia le azioni da intraprendere.",
-            "es": "ICO Poolsensor permite controlar el estado del agua en su piscina y recomienda acciones a tomar.",
-            "pl": "ICO Poolsensor pozwala monitorować stan wody w Twoim basenie i rekomenduje działania, które należy podjąć.",
-            "zh-cn": "ICO Poolsensor 允许监控池中水的状态并建议采取的措施。"
+            "en": "ICO Pool sensor allow to monitor the state and temperature of the water in your pool and recommends actions to take.",
+            "de": "Der ICO Poolsensor ermöglicht es, den Zustand und die Temperatur des Wassers in Ihrem Pool zu überwachen und empfiehlt Maßnahmen.",
+            "ru": "Датчик ICO Pool позволяет отслеживать состояние и температуру воды в вашем бассейне и рекомендует действия, которые необходимо предпринять.",
+            "pt": "O sensor ICO Pool permite monitorar o estado e a temperatura da água em sua piscina e recomenda ações a serem tomadas.",
+            "nl": "Met de ICO Pool-sensor kan de toestand en temperatuur van het water in uw zwembad worden gecontroleerd en worden acties aanbevolen.",
+            "fr": "Le capteur de piscine ICO permet de surveiller l'état et la température de l'eau de votre piscine et recommande les actions à entreprendre.",
+            "it": "Il sensore ICO Pool consente di monitorare lo stato e la temperatura dell'acqua nella piscina e consiglia le azioni da intraprendere.",
+            "es": "El sensor ICO Pool permite controlar el estado y la temperatura del agua de su piscina y recomienda acciones a tomar.",
+            "pl": "Czujnik ICO Pool pozwala monitorować stan i temperaturę wody w Twoim basenie oraz rekomendować działania.",
+            "zh-cn": "ICO 池传感器允许监控池中水的状态和温度，并建议采取的措施。"
         },
         "authors": [
             "Garfonso <garfonso@mobo.info>"
@@ -66,7 +66,7 @@
         "materialize": true,
         "dependencies": [
             {
-                "js-controller": ">=2.0.0"
+                "js-controller": ">=3.0.0"
             }
         ]
     },
