@@ -13,11 +13,19 @@
 
 ## ico adapter for ioBroker
 
-ICO Pool sensors allow to monitor the state and temperature of the water in your pool and recommend actions to take.
+ICO Pool sensor (by ondilo) allows to monitor the state and temperature of the water in your pool and recommend actions to take.
 
-The adapter connects to the Ondilo cloud service and retrieves all measurements. You can define the poll interval in the settings.
+The adapter connects to the Ondilo cloud service and retrieves all measurements.
 
-It is necessary to start the login process in the settings, too. 
+### Configuration 
+You can define the poll interval in the settings (in minutes). 
+It is necessary to start the login process in the settings, too.
+
+
+### Attribution 
+This adapter is **not** developed or owned by Ondilo but the ioBroker community.
+
+Icon and name of ICO and Ondilo are property of Ondilo.
 
 ## Changelog
 <!--
