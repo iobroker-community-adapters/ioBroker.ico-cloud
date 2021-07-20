@@ -42,26 +42,26 @@ class Api {
                     return true;
                 }
                 else {
-                    this.log.warn('Refresh failed: no token in response!!: ' + JSON.stringify(response.data));
+                    throw new Error('No toke in response. ' + JSON.stringify(response.data));
                 }
             }
             else {
-                this.log.warn('Refresh failed: ' + response.status + ' - ' + response.statusText);
+                throw new Error(response.status + ' - ' + JSON.stringify(response.data));
             }
         }
         catch (e) {
             if (axios_1.default.isAxiosError(e)) {
-                this.log.warn('Had network error during refresh ' + e);
+                const response = e.response || { status: 0, data: 'Unknown failure', headers: '' };
+                throw new Error('Could not update token: ' + response.status + ' - ' + JSON.stringify(response.data));
             }
             else {
                 this.log.error('Unexpected error during refresh: ' + e);
+                throw new Error('Could not update token: ' + e);
             }
         }
-        return false;
     }
     async requestInfo(urlPart, method = 'get', triedRefresh = false) {
         try {
-            this.log.debug('Using token: ' + this.accessToken);
             const response = await axios_1.default.request({
                 url: apiPrefix + urlPart,
                 method,
@@ -85,22 +85,20 @@ class Api {
             if (axios_1.default.isAxiosError(e)) {
                 const response = e.response || { status: 0, data: 'Unknown failure', headers: '' };
                 if (response.status === 401 && !triedRefresh) {
-                    this.log.debug('Old token: ' + this.accessToken);
                     const refreshWorked = await this.doRefreshToken();
                     if (refreshWorked) {
-                        this.log.debug('New token: ' + this.accessToken);
                         return this.requestInfo(urlPart, method, true);
                     }
+                    throw new Error('Could not update token: ' + response.status + ' - ' + JSON.stringify(response.data));
                 }
                 else {
-                    this.log.warn(`API Error ${response.status} while getting ${urlPart}: ${response.data} - headers: ${response.headers}`);
+                    throw new Error(`API Error ${response.status} while getting ${urlPart}: ${JSON.stringify(response.data)} - headers: ${JSON.stringify(response.headers)}`);
                 }
             }
             else {
-                this.log.warn('Unexpected error getting ' + urlPart + ': ' + e.stack);
+                throw new Error('Unexpected error getting ' + urlPart + ': ' + e.stack);
             }
         }
-        return null;
     }
     //===========================================================================================================
     // ========== User stuff:
@@ -170,14 +168,17 @@ class Api {
     // ========== Measurements:
     //===========================================================================================================
     async getLastMeasures(id) {
-        const data = await this.requestInfo(`pools/${id}/lastmeasures?
+        const data = (await this.requestInfo(`pools/${id}/lastmeasures?
             types[]=temperature&
             types[]=ph&
             types[]=orp&
             types[]=salt&
             types[]=tds&
             types[]=battery&
-            types[]=rssi`);
+            types[]=rssi`));
+        for (const measure of data) {
+            measure.value_time = new Date(measure.value_time);
+        }
         return data;
     }
     /**
@@ -187,16 +188,24 @@ class Api {
      * @param period
      */
     async getMeasures(id, type, period) {
-        const data = await this.requestInfo(`pools/${id}/measure?
+        const data = (await this.requestInfo(`pools/${id}/measure?
             type=${type}&
-            period=${period}`);
+            period=${period}`));
+        for (const measure of data) {
+            measure.value_time = new Date(measure.value_time);
+        }
         return data;
     }
     //===========================================================================================================
     // ========== Recommendations:
     //===========================================================================================================
     async getRecommendations(id) {
-        const data = await this.requestInfo(`pools/${id}/recommendations`);
+        const data = (await this.requestInfo(`pools/${id}/recommendations`));
+        for (const recommendation of data) {
+            recommendation.created_at = new Date(recommendation.created_at);
+            recommendation.updated_at = new Date(recommendation.updated_at);
+            recommendation.deadline = new Date(recommendation.deadline);
+        }
         return data;
     }
     async validateRecommendation(poolId, recommendationId) {
