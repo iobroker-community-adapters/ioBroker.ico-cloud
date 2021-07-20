@@ -1,15 +1,15 @@
-![Logo](admin/ico.png)
-# ioBroker.ico
+![Logo](admin.ico-cloud.png)
+# ioBroker.ico-cloud
 
-[![NPM version](https://img.shields.io/npm/v/iobroker.ico.svg)](https://www.npmjs.com/package/iobroker.ico)
-[![Downloads](https://img.shields.io/npm/dm/iobroker.ico.svg)](https://www.npmjs.com/package/iobroker.ico)
-![Number of Installations (latest)](https://iobroker.live/badges/ico-installed.svg)
-![Number of Installations (stable)](https://iobroker.live/badges/ico-stable.svg)
-[![Dependency Status](https://img.shields.io/david/iobroker-community-adapters/iobroker.ico.svg)](https://david-dm.org/iobroker-community-adapters/iobroker.ico)
+[![NPM version](https://img.shields.io/npm/v/iobroker.ico-cloud.svg)](https://www.npmjs.com/package/iobroker.ico-cloud)
+[![Downloads](https://img.shields.io/npm/dm/iobroker.ico-cloud.svg)](https://www.npmjs.com/package/iobroker.ico-cloud)
+![Number of Installations (latest)](https://iobroker.live/badges.ico-cloud-installed.svg)
+![Number of Installations (stable)](https://iobroker.live/badges.ico-cloud-stable.svg)
+[![Dependency Status](https://img.shields.io/david/iobroker-community-adapters/iobroker.ico-cloud.svg)](https://david-dm.org/iobroker-community-adapters/iobroker.ico-cloud)
 
-[![NPM](https://nodei.co/npm/iobroker.ico.png?downloads=true)](https://nodei.co/npm/iobroker.ico/)
+[![NPM](https://nodei.co/npm/iobroker.ico-cloud.png?downloads=true)](https://nodei.co/npm/iobroker.ico-cloud/)
 
-**Tests:** ![Test and Release](https://github.com/iobroker-community-adapters/ioBroker.ico/workflows/Test%20and%20Release/badge.svg)
+**Tests:** ![Test and Release](https://github.com/iobroker-community-adapters/ioBroker.ico-cloud/workflows/Test%20and%20Release/badge.svg)
 
 ## ico adapter for ioBroker
 
@@ -32,6 +32,9 @@ Icon and name of ICO and Ondilo are property of Ondilo.
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+* (Garfonso) Rename to ico-cloud
+
 ### 0.0.2 (2021-07-20)
 * (Garfonso) initial release
 

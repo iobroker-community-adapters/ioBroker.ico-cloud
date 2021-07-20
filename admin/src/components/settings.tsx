@@ -114,9 +114,9 @@ class Settings extends React.Component<SettingsProps, SettingsState> {
 
     async onOauthSuccess(response: {code: string, state: string}) {
         console.log(response);
-        const state = localStorage.getItem('ioBroker.ico.state');
+        const state = localStorage.getItem('ioBroker.ico-cloud.state');
         if (response.code && response.state === state) {
-            localStorage.removeItem('ioBroker.ico.state');
+            localStorage.removeItem('ioBroker..ico-cloud.state');
 
             const result = await fetch('https://interop.ondilo.com/oauth2/token', {
                 method: 'POST',
@@ -143,7 +143,7 @@ class Settings extends React.Component<SettingsProps, SettingsState> {
         console.log(response);
         console.log('Should show message...??? :-(');
         this.setState({showMessage: I18n.t('loginErrorMessage') + response});
-        localStorage.removeItem('ioBroker.ico.state');
+        localStorage.removeItem('ioBroker..ico-cloud.state');
     }
 
     renderCheckbox(title: AdminWord, attr: string, style?: React.CSSProperties) {
@@ -185,8 +185,8 @@ class Settings extends React.Component<SettingsProps, SettingsState> {
     }
 
     render() {
-        const state = 'ioBroker.ico' + Date.now() * Math.random();
-        localStorage.setItem('ioBroker.ico.state', state);
+        const state = 'ioBroker..ico-cloud' + Date.now() * Math.random();
+        localStorage.setItem('ioBroker..ico-cloud.state', state);
 
         return (
             <form className={this.props.classes.tab}>

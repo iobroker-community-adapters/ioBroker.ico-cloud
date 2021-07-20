@@ -11,7 +11,7 @@ function build(): void {
     ReactDOM.render(
         <MuiThemeProvider theme={theme(themeName)}>
             <App
-                adapterName="ico"
+                adapterName="ico-cloud"
                 onThemeChange={(_theme) => {
                     themeName = _theme;
                     build();

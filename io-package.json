@@ -1,6 +1,6 @@
 {
     "common": {
-        "name": "ico",
+        "name": "ico-cloud",
         "version": "0.0.2",
         "news": {
             "0.0.2": {
@@ -65,10 +65,10 @@
         "license": "MIT",
         "platform": "Javascript/Node.js",
         "main": "build/main.js",
-        "icon": "ico.png",
+        "icon": "ico-cloud.png",
         "enabled": true,
-        "extIcon": "https://raw.githubusercontent.com/iobroker-community-adapters/ioBroker.ico/master/admin/ico.png",
-        "readme": "https://github.com/iobroker-community-adapters/ioBroker.ico/blob/master/README.md",
+        "extIcon": "https://raw.githubusercontent.com/iobroker-community-adapters/ioBroker.ico-cloud/master/admin/ico-cloud.png",
+        "readme": "https://github.com/iobroker-community-adapters/ioBroker.ico-cloud/blob/master/README.md",
         "loglevel": "info",
         "mode": "daemon",
         "type": "metering",
