@@ -79591,7 +79591,126 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "d
 
 var _default = _OAuth2Login["default"];
 exports["default"] = _default;
-},{"./OAuth2Login":"../../node_modules/react-simple-oauth2-login/dist/OAuth2Login.js"}],"components/settings.tsx":[function(require,module,exports) {
+},{"./OAuth2Login":"../../node_modules/react-simple-oauth2-login/dist/OAuth2Login.js"}],"../../node_modules/@iobroker/adapter-react/Dialogs/Message.js":[function(require,module,exports) {
+"use strict";
+
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports["default"] = void 0;
+
+var _react = _interopRequireDefault(require("react"));
+
+var _propTypes = _interopRequireDefault(require("prop-types"));
+
+var _Button = _interopRequireDefault(require("@material-ui/core/Button"));
+
+var _Dialog = _interopRequireDefault(require("@material-ui/core/Dialog"));
+
+var _DialogActions = _interopRequireDefault(require("@material-ui/core/DialogActions"));
+
+var _DialogContent = _interopRequireDefault(require("@material-ui/core/DialogContent"));
+
+var _DialogContentText = _interopRequireDefault(require("@material-ui/core/DialogContentText"));
+
+var _DialogTitle = _interopRequireDefault(require("@material-ui/core/DialogTitle"));
+
+var _i18n = _interopRequireDefault(require("../i18n"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+/**
+ * @typedef {object} DialogMessageProps
+ * @property {string} [key] The key to identify this component.
+ * @property {string} [title] The dialog title; default: Message (translated)
+ * @property {string} text The dialog text.
+ * @property {() => void} [onClose] Close handler.
+ *
+ * @extends {React.Component<DialogMessageProps>}
+ */
+var DialogMessage = /*#__PURE__*/function (_React$Component) {
+  _inherits(DialogMessage, _React$Component);
+
+  var _super = _createSuper(DialogMessage);
+
+  function DialogMessage() {
+    _classCallCheck(this, DialogMessage);
+
+    return _super.apply(this, arguments);
+  }
+
+  _createClass(DialogMessage, [{
+    key: "handleOk",
+    value: function handleOk() {
+      this.props.onClose && this.props.onClose();
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      var _this = this;
+
+      return /*#__PURE__*/_react["default"].createElement(_Dialog["default"], {
+        key: this.props.key,
+        open: true,
+        maxWidth: "sm",
+        fullWidth: true,
+        onClose: function onClose() {
+          return _this.handleOk();
+        },
+        "aria-labelledby": "message-dialog-title",
+        "aria-describedby": "message-dialog-description"
+      }, /*#__PURE__*/_react["default"].createElement(_DialogTitle["default"], {
+        id: "message-dialog-title"
+      }, this.props.title || _i18n["default"].t('ra_Message')), /*#__PURE__*/_react["default"].createElement(_DialogContent["default"], null, /*#__PURE__*/_react["default"].createElement(_DialogContentText["default"], {
+        id: "message-dialog-description"
+      }, this.props.text)), /*#__PURE__*/_react["default"].createElement(_DialogActions["default"], null, /*#__PURE__*/_react["default"].createElement(_Button["default"], {
+        variant: "contained",
+        onClick: function onClick() {
+          return _this.handleOk();
+        },
+        color: "primary",
+        autoFocus: true
+      }, _i18n["default"].t('ra_Close'))));
+    }
+  }]);
+
+  return DialogMessage;
+}(_react["default"].Component);
+
+DialogMessage.propTypes = {
+  key: _propTypes["default"].string,
+  onClose: _propTypes["default"].func,
+  title: _propTypes["default"].string,
+  text: _propTypes["default"].string,
+  icon: _propTypes["default"].object
+};
+var _default = DialogMessage;
+exports["default"] = _default;
+
+
+},{"react":"../../node_modules/react/index.js","prop-types":"../../node_modules/prop-types/index.js","@material-ui/core/Button":"../../node_modules/@material-ui/core/esm/Button/index.js","@material-ui/core/Dialog":"../../node_modules/@material-ui/core/esm/Dialog/index.js","@material-ui/core/DialogActions":"../../node_modules/@material-ui/core/esm/DialogActions/index.js","@material-ui/core/DialogContent":"../../node_modules/@material-ui/core/esm/DialogContent/index.js","@material-ui/core/DialogContentText":"../../node_modules/@material-ui/core/esm/DialogContentText/index.js","@material-ui/core/DialogTitle":"../../node_modules/@material-ui/core/esm/DialogTitle/index.js","../i18n":"../../node_modules/@iobroker/adapter-react/i18n.js"}],"components/settings.tsx":[function(require,module,exports) {
 "use strict";
 
 var __extends = this && this.__extends || function () {
@@ -79815,14 +79934,19 @@ var i18n_1 = __importDefault(require("@iobroker/adapter-react/i18n"));
 
 var react_simple_oauth2_login_1 = __importDefault(require("react-simple-oauth2-login"));
 
+var Message_1 = __importDefault(require("@iobroker/adapter-react/Dialogs/Message"));
+
 var styles = function styles() {
   return {
     input: {
-      marginTop: 0,
+      marginTop: 10,
+      marginLeft: 20,
       minWidth: 400
     },
     button: {
-      marginRight: 20
+      marginRight: 20,
+      marginLeft: 20,
+      marginTop: 10
     },
     card: {
       maxWidth: 345,
@@ -79858,7 +79982,9 @@ function (_super) {
   function Settings(props) {
     var _this = _super.call(this, props) || this;
 
-    _this.state = {};
+    _this.state = {
+      showMessage: false
+    };
     return _this;
   }
 
@@ -79888,7 +80014,7 @@ function (_super) {
     }, react_1.default.createElement(Select_1.default, {
       value: this.props.native[attr] || '_',
       onChange: function onChange(e) {
-        return _this.props.onChange(attr, e.target.value === "_" ? "" : e.target.value);
+        return _this.props.onChange(attr, e.target.value === '_' ? '' : e.target.value);
       },
       input: react_1.default.createElement(Input_1.default, {
         name: attr,
@@ -79897,7 +80023,7 @@ function (_super) {
     }, options.map(function (item) {
       return react_1.default.createElement(MenuItem_1.default, {
         key: 'key-' + item.value,
-        value: item.value || "_"
+        value: item.value || '_'
       }, i18n_1.default.t(item.title));
     })), react_1.default.createElement(FormHelperText_1.default, null, i18n_1.default.t(title)));
   };
@@ -79938,11 +80064,17 @@ function (_super) {
             data = _a.sent();
             this.props.onChange('refreshToken', data.refresh_token);
             this.props.onChange('accessToken', data.access_token);
+            this.setState({
+              showMessage: i18n_1.default.t('loginSuccessMessage')
+            });
             return [3
             /*break*/
             , 4];
 
           case 3:
+            this.setState({
+              showMessage: i18n_1.default.t('loginWrongStateMessage')
+            });
             console.warn('Supplied state did not match stored state.');
             _a.label = 4;
 
@@ -79957,6 +80089,10 @@ function (_super) {
 
   Settings.prototype.onOauthFailure = function (response) {
     console.log(response);
+    console.log('Should show message...??? :-(');
+    this.setState({
+      showMessage: i18n_1.default.t('loginErrorMessage') + response
+    });
     localStorage.removeItem('ioBroker.ico.state');
   };
 
@@ -79980,70 +80116,72 @@ function (_super) {
     });
   };
 
-  Settings.prototype.render = function () {
-    var params = window.location.search; //got code -> get token.
+  Settings.prototype.renderMessage = function () {
+    var _this = this;
 
-    if (params && params.includes('code=')) {
-      var code = void 0;
-      var match = false;
-      var kv = params.split('&').map(function (kv) {
-        return kv.split('=');
+    if (this.state.showMessage) {
+      return react_1.default.createElement(Message_1.default, {
+        text: this.state.showMessage,
+        onClose: function onClose() {
+          return _this.setState({
+            showMessage: false
+          });
+        }
       });
-
-      for (var _i = 0, kv_1 = kv; _i < kv_1.length; _i++) {
-        var _a = kv_1[_i],
-            key = _a[0],
-            value = _a[1];
-
-        if (key === 'code') {
-          code = value;
-        }
-
-        if (key === 'state') {
-          var oldState = localStorage.getItem('ioBroker.ico.state');
-          match = value === oldState;
-        }
-      }
-
-      if (match) {
-        this.props.onChange('code', code);
-        return react_1.default.createElement("div", null, i18n_1.default.t('labelSaveAndClose'));
-      } else {
-        console.log('Ignoring code for non matching state.');
-      }
+    } else {
+      return null;
     }
+  };
 
+  Settings.prototype.renderExplanation = function () {
+    if (!this.props.native.refreshToken) {
+      return react_1.default.createElement(react_1.default.Fragment, null, i18n_1.default.t('loginPleaseMessage'));
+    }
+  };
+
+  Settings.prototype.render = function () {
     var state = 'ioBroker.ico' + Date.now() * Math.random();
     localStorage.setItem('ioBroker.ico.state', state);
     return react_1.default.createElement("form", {
       className: this.props.classes.tab
-    }, this.renderInput('labelPollinterval', 'pollinterval', 'number'), react_1.default.createElement(react_simple_oauth2_login_1.default, {
+    }, this.renderMessage(), this.renderInput('labelPollinterval', 'pollinterval', 'number'), react_1.default.createElement(react_simple_oauth2_login_1.default, {
       authorizationUrl: "https://interop.ondilo.com/oauth2/authorize",
       responseType: "code",
       clientId: "customer_api",
+      scope: "api",
       redirectUri: window.location.origin + '/',
       isCrossOrigin: false,
       onSuccess: this.onOauthSuccess.bind(this),
       onFailure: this.onOauthFailure.bind(this),
-      state: state
-    }));
+      state: state,
+      buttonText: i18n_1.default.t('login'),
+      className: "MuiButtonBase-root MuiFab-root MuiFab-extended " + this.props.classes.button + " " + this.props.classes.controlElement
+    }), this.renderExplanation());
   };
 
   return Settings;
 }(react_1.default.Component);
 
 exports.default = styles_1.withStyles(styles)(Settings);
-},{"react":"../../node_modules/react/index.js","@material-ui/core/styles":"../../node_modules/@material-ui/core/esm/styles/index.js","@material-ui/core/TextField":"../../node_modules/@material-ui/core/esm/TextField/index.js","@material-ui/core/Input":"../../node_modules/@material-ui/core/esm/Input/index.js","@material-ui/core/FormHelperText":"../../node_modules/@material-ui/core/esm/FormHelperText/index.js","@material-ui/core/FormControl":"../../node_modules/@material-ui/core/esm/FormControl/index.js","@material-ui/core/Select":"../../node_modules/@material-ui/core/esm/Select/index.js","@material-ui/core/MenuItem":"../../node_modules/@material-ui/core/esm/MenuItem/index.js","@material-ui/core/FormControlLabel":"../../node_modules/@material-ui/core/esm/FormControlLabel/index.js","@material-ui/core/Checkbox":"../../node_modules/@material-ui/core/esm/Checkbox/index.js","@iobroker/adapter-react/i18n":"../../node_modules/@iobroker/adapter-react/i18n.js","react-simple-oauth2-login":"../../node_modules/react-simple-oauth2-login/dist/index.js"}],"i18n/en.json":[function(require,module,exports) {
+},{"react":"../../node_modules/react/index.js","@material-ui/core/styles":"../../node_modules/@material-ui/core/esm/styles/index.js","@material-ui/core/TextField":"../../node_modules/@material-ui/core/esm/TextField/index.js","@material-ui/core/Input":"../../node_modules/@material-ui/core/esm/Input/index.js","@material-ui/core/FormHelperText":"../../node_modules/@material-ui/core/esm/FormHelperText/index.js","@material-ui/core/FormControl":"../../node_modules/@material-ui/core/esm/FormControl/index.js","@material-ui/core/Select":"../../node_modules/@material-ui/core/esm/Select/index.js","@material-ui/core/MenuItem":"../../node_modules/@material-ui/core/esm/MenuItem/index.js","@material-ui/core/FormControlLabel":"../../node_modules/@material-ui/core/esm/FormControlLabel/index.js","@material-ui/core/Checkbox":"../../node_modules/@material-ui/core/esm/Checkbox/index.js","@iobroker/adapter-react/i18n":"../../node_modules/@iobroker/adapter-react/i18n.js","react-simple-oauth2-login":"../../node_modules/react-simple-oauth2-login/dist/index.js","@iobroker/adapter-react/Dialogs/Message":"../../node_modules/@iobroker/adapter-react/Dialogs/Message.js"}],"i18n/en.json":[function(require,module,exports) {
 module.exports = {
   "ico adapter settings": "Adapter settings for ico",
   "labelPollinterval": "Pollinterval (in minutes)",
-  "labelSaveAndClose": "Received code. Please press Save button."
+  "loginSuccessMessage": "Received code. Please press Save button. Login is done now.",
+  "loginWrongStateMessage": "Received code but was not matching session state. Please try to login again in a few minutes.",
+  "loginErrorMessage": "Could not get log in: ",
+  "login": "Login with Ondilo",
+  "loginPleaseMessage": "No tokens, yet. Please login."
 };
 },{}],"i18n/de.json":[function(require,module,exports) {
 module.exports = {
   "ico adapter settings": "Adaptereinstellungen für ico",
   "labelPollinterval": "Frage Zustand alle x Minuten ab",
-  "labelSaveAndClose": "Code erhalten. Bitte den Speichern Knopf drücken."
+  "loginSuccessMessage": "Code erhalten. Bitte den Speichern Knopf drücken. Login ist damit erfolgreich.",
+  "loginWrongStateMessage": "Code erhalten, aber er passt nicht zur Session. Bitte in ein paar Minuten noch einmal versuchen.",
+  "loginErrorMessage": "Konnte nicht einloggen: ",
+  "login": "Bei Ondilo Einloggen",
+  "loginPleaseMessage": "Nock kein Zugangstoken, bitte einloggen."
 };
 },{}],"i18n/ru.json":[function(require,module,exports) {
 module.exports = {
@@ -80175,16 +80313,16 @@ function (_super) {
     var extendedProps = __assign(__assign({}, props), {
       encryptedFields: ['refreshToken', 'accessToken'],
       translations: {
-        "en": require("./i18n/en.json"),
-        "de": require("./i18n/de.json"),
-        "ru": require("./i18n/ru.json"),
-        "pt": require("./i18n/pt.json"),
-        "nl": require("./i18n/nl.json"),
-        "fr": require("./i18n/fr.json"),
-        "it": require("./i18n/it.json"),
-        "es": require("./i18n/es.json"),
-        "pl": require("./i18n/pl.json"),
-        "zh-cn": require("./i18n/zh-cn.json")
+        'en': require('./i18n/en.json'),
+        'de': require('./i18n/de.json'),
+        'ru': require('./i18n/ru.json'),
+        'pt': require('./i18n/pt.json'),
+        'nl': require('./i18n/nl.json'),
+        'fr': require('./i18n/fr.json'),
+        'it': require('./i18n/it.json'),
+        'es': require('./i18n/es.json'),
+        'pl': require('./i18n/pl.json'),
+        'zh-cn': require('./i18n/zh-cn.json')
       }
     });
 
@@ -80252,7 +80390,7 @@ function build() {
       themeName = _theme;
       build();
     }
-  })), document.getElementById("root"));
+  })), document.getElementById('root'));
 }
 
 build();
@@ -80284,7 +80422,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "60096" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "63349" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

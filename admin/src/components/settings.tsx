@@ -11,14 +11,18 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import I18n from '@iobroker/adapter-react/i18n';
 import OAuth2Login from 'react-simple-oauth2-login';
+import Message from '@iobroker/adapter-react/Dialogs/Message';
 
 const styles = (): Record<string, CreateCSSProperties> => ({
     input: {
-        marginTop: 0,
+        marginTop: 10,
+        marginLeft: 20,
         minWidth: 400,
     },
     button: {
         marginRight: 20,
+        marginLeft: 20,
+        marginTop: 10,
     },
     card: {
         maxWidth: 345,
@@ -54,13 +58,15 @@ interface SettingsProps {
 
 interface SettingsState {
     // add your state properties here
-    dummy?: undefined;
+    showMessage: false | string;
 }
 
 class Settings extends React.Component<SettingsProps, SettingsState> {
     constructor(props: SettingsProps) {
         super(props);
-        this.state = {};
+        this.state = {
+            showMessage: false
+        };
     }
 
     renderInput(title: AdminWord, attr: string, type: string) {
@@ -92,11 +98,11 @@ class Settings extends React.Component<SettingsProps, SettingsState> {
             >
                 <Select
                     value={this.props.native[attr] || '_'}
-                    onChange={(e) => this.props.onChange(attr, e.target.value === "_" ? "" : e.target.value)}
+                    onChange={(e) => this.props.onChange(attr, e.target.value === '_' ? '' : e.target.value)}
                     input={<Input name={attr} id={attr + '-helper'} />}
                 >
                     {options.map((item) => (
-                        <MenuItem key={'key-' + item.value} value={item.value || "_"}>
+                        <MenuItem key={'key-' + item.value} value={item.value || '_'}>
                             {I18n.t(item.title)}
                         </MenuItem>
                     ))}
@@ -126,13 +132,17 @@ class Settings extends React.Component<SettingsProps, SettingsState> {
             const data = await result.json();
             this.props.onChange('refreshToken', data.refresh_token);
             this.props.onChange('accessToken', data.access_token);
+            this.setState({showMessage: I18n.t('loginSuccessMessage')});
         } else {
+            this.setState({showMessage: I18n.t('loginWrongStateMessage')});
             console.warn('Supplied state did not match stored state.');
         }
     }
 
     onOauthFailure(response: unknown) {
         console.log(response);
+        console.log('Should show message...??? :-(');
+        this.setState({showMessage: I18n.t('loginErrorMessage') + response});
         localStorage.removeItem('ioBroker.ico.state');
     }
 
@@ -157,50 +167,47 @@ class Settings extends React.Component<SettingsProps, SettingsState> {
         );
     }
 
-    render() {
-        const params = window.location.search;
-        //got code -> get token.
-        if (params && params.includes('code=')) {
-            let code;
-            let match = false;
-            const kv = params.split('&').map(kv => kv.split('='));
-            for (const [key, value] of kv) {
-                if (key === 'code') {
-                    code = value;
-                }
-                if (key === 'state') {
-                    const oldState = localStorage.getItem('ioBroker.ico.state');
-                    match = value === oldState;
-                }
-            }
-
-            if (match) {
-                this.props.onChange('code', code);
-                return (
-                    <div>{I18n.t('labelSaveAndClose')}</div>
-                );
-            } else {
-                console.log('Ignoring code for non matching state.');
-            }
+    renderMessage() {
+        if (this.state.showMessage) {
+            return <Message
+                text={this.state.showMessage}
+                onClose={() => this.setState({showMessage: false})}
+            />;
+        } else {
+            return null;
         }
+    }
 
+    renderExplanation() {
+        if (!this.props.native.refreshToken) {
+            return <>{I18n.t('loginPleaseMessage')}</>
+        }
+    }
+
+    render() {
         const state = 'ioBroker.ico' + Date.now() * Math.random();
         localStorage.setItem('ioBroker.ico.state', state);
 
         return (
             <form className={this.props.classes.tab}>
+                {this.renderMessage()}
                 {this.renderInput('labelPollinterval', 'pollinterval', 'number')}
 
                 <OAuth2Login
                     authorizationUrl="https://interop.ondilo.com/oauth2/authorize"
                     responseType="code"
                     clientId="customer_api"
+                    scope="api"
                     redirectUri={window.location.origin + '/'}
                     isCrossOrigin={false}
                     onSuccess={this.onOauthSuccess.bind(this)}
                     onFailure={this.onOauthFailure.bind(this)}
                     state={state}
+                    buttonText={I18n.t('login')}
+                    className={`MuiButtonBase-root MuiFab-root MuiFab-extended ${this.props.classes.button} ${this.props.classes.controlElement}`}
                 />
+
+                {this.renderExplanation()}
             </form>
         );
     }

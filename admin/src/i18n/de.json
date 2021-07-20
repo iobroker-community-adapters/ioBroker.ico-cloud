@@ -1,5 +1,9 @@
 {
     "ico adapter settings": "Adaptereinstellungen für ico",
     "labelPollinterval": "Frage Zustand alle x Minuten ab",
-    "labelSaveAndClose": "Code erhalten. Bitte den Speichern Knopf drücken."
+    "loginSuccessMessage": "Code erhalten. Bitte den Speichern Knopf drücken. Login ist damit erfolgreich.",
+    "loginWrongStateMessage": "Code erhalten, aber er passt nicht zur Session. Bitte in ein paar Minuten noch einmal versuchen.",
+    "loginErrorMessage": "Konnte nicht einloggen: ",
+    "login": "Bei Ondilo Einloggen",
+    "loginPleaseMessage": "Nock kein Zugangstoken, bitte einloggen."
 }
