@@ -1,6 +1,6 @@
 {
   "name": "iobroker.ico",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "ICO Pool sensor allow to monitor the state of the water in your pool and recommends actions to take.",
   "author": {
     "name": "Garfonso",
