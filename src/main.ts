@@ -11,18 +11,18 @@ import {Api, PossibleTypes} from './lib/api';
 // Load your modules here, e.g.:
 // import * as fs from "fs";
 
-interface myDevice extends ioBroker.DeviceObject {
-    native: {
-        poolId: number,
-        swVersion: string,
-        hasObjects: Record<string, boolean>
-    }
+interface myDevice {
+    poolId: number,
+    swVersion: string,
+    hasObjects: Record<string, boolean>
+    uuid: string
 }
 
 class Ico extends utils.Adapter {
     private api?: Api;
     private pollInterval = 0;
     private devices: Array<myDevice> = [];
+    private pollTimeout : NodeJS.Timeout | null = null;
 
     public constructor(options: Partial<utils.AdapterOptions> = {}) {
         super({
@@ -45,7 +45,7 @@ class Ico extends utils.Adapter {
         // The adapters config (in the instance object everything under the attribute "native") is accessible via
         // this.config:
         this.log.info('Configured pollinterval: ' + this.config.pollinterval);
-        this.log.info('refreshToken: ' + this.config.refreshToken);
+        //this.log.info('refreshToken: ' + this.config.refreshToken);
 
         if (this.config.refreshToken) {
             this.api = new Api({
@@ -58,82 +58,97 @@ class Ico extends utils.Adapter {
 
             if (this.config.pollinterval) {
                 this.pollInterval = Math.max(1, this.config.pollinterval) * 60 * 1000; //convert from minutes to milliseconds.
-                setTimeout(this.poll, this.pollInterval);
+                await this.poll();
             }
         } else {
             this.log.info('Not authorized, yet. Please see configuration.');
         }
     }
 
-    private async updateDevices(){
+    private async updateDevices() : Promise<void> {
         const devices = await this.getDevicesAsync();
 
-        const poolArray = await this.api!.getPools();
-        for (const pool of poolArray) {
-            if (pool.id) {
-                const icoDevice = await this.api!.getDevice(pool.id);
+        try {
+            const poolArray = await this.api!.getPools();
+            for (const pool of poolArray) {
+                if (pool.id) {
+                    const icoDevice = await this.api!.getDevice(pool.id);
 
-                let found = false;
-                for (const device of devices) {
-                    const uuid = device._id.split('.').pop();
-                    if (uuid === icoDevice.uuid) {
-                        found = true;
-                        let needsUpdate = false;
-                        if (device.native.poolId !== pool.id) {
-                            needsUpdate = true;
-                            device.native.poolId = pool.id;
-                        }
-                        if (device.native.swVersion !== icoDevice.sw_version) {
-                            needsUpdate = true;
-                            device.native.swVersion = icoDevice.sw_version;
-                        }
-                        if (needsUpdate) {
-                            await this.setObjectAsync(device._id, device);
-                        }
+                    let found = false;
+                    for (const device of devices) {
+                        const uuid = device._id.split('.').pop();
+                        if (uuid === icoDevice.uuid) {
+                            found = true;
+                            let needsUpdate = false;
+                            if (device.native.poolId !== pool.id) {
+                                needsUpdate = true;
+                                device.native.poolId = pool.id;
+                            }
+                            if (device.native.swVersion !== icoDevice.sw_version) {
+                                needsUpdate = true;
+                                device.native.swVersion = icoDevice.sw_version;
+                            }
+                            if (needsUpdate) {
+                                await this.setObjectAsync(device._id, device);
+                            }
 
-                        this.devices.push(<myDevice> device);
-                        //remove device from devices array:
-                        const index = devices.indexOf(device);
-                        if (index >= 0) {
-                            devices.splice(index, 1);
-                        }
-                        break;
-                    }
-                }
-
-                //create device from pool / device if necessary
-                if (!found) {
-                    const id = this.namespace + '.' + icoDevice.uuid;
-                    const deviceObj = <myDevice> {
-                        type: 'device',
-                        common: {
-                            name: <string> pool.name
-                        },
-                        native: {
-                            poolId: <number> pool.id,
-                            swVersion: icoDevice.sw_version,
-                            hasObjects: {}
+                            this.devices.push({
+                                poolId: pool.id as number,
+                                swVersion: icoDevice.sw_version,
+                                uuid: icoDevice.uuid,
+                                hasObjects: {}
+                            });
+                            //remove device from devices array:
+                            const index = devices.indexOf(device);
+                            if (index >= 0) {
+                                devices.splice(index, 1);
+                            }
+                            break;
                         }
                     }
-                    this.devices.push(deviceObj);
-                    await this.setObjectAsync(id, deviceObj);
+
+                    //create device from pool / device if necessary
+                    if (!found) {
+                        const id = this.namespace + '.' + icoDevice.uuid;
+                        const deviceObj = {
+                            type: 'device' as const,
+                            common: {
+                                name: <string>pool.name
+                            },
+                            native: {
+                                poolId: pool.id as number,
+                                swVersion: icoDevice.sw_version
+                            }
+                        }
+                        this.devices.push({
+                            poolId: deviceObj.native.poolId,
+                            swVersion: deviceObj.native.swVersion,
+                            hasObjects: {},
+                            uuid: icoDevice.uuid
+                        });
+                        await this.setObjectAsync(id, deviceObj);
+                    }
                 }
             }
-        }
 
-        //if we still have devices, those are not in the cloud anymore -> remove.
-        for (const device of devices) {
-            await this.deleteDeviceAsync(device._id); //does this work as intended??
-            /*const objectsToDelete = await this.getObjectListAsync({startkey: device._id + '.', endkey: device._id + '.\u9999'});
-            const promises = [];
-            for (const obj of objectsToDelete) {
-                promises.push(this.delObjectAsync(obj._id));
-            }*/
+            //if we still have devices, those are not in the cloud anymore -> remove.
+            for (const device of devices) {
+                this.log.debug('Deleting device ' + device.common.name);
+                await this.deleteDeviceAsync(device._id.split('.').pop() as string); //does this work as intended??
+                /*const objectsToDelete = await this.getObjectListAsync({startkey: device._id + '.', endkey: device._id + '.\u9999'});
+                const promises = [];
+                for (const obj of objectsToDelete) {
+                    promises.push(this.delObjectAsync(obj._id));
+                }*/
+            }
+        } catch (e) {
+            this.log.error('Could not update devices: ' + e + '. If network error, retry later. Otherwise, please try to login again.');
+            this.terminate('Could not update devices.', utils.EXIT_CODES.ADAPTER_REQUESTED_TERMINATION);
         }
     }
 
-    private async createObjectForMeasurement(device: myDevice, type: PossibleTypes){
-        let role = 'state';
+    private async createObjectForMeasurement(device: myDevice, type: PossibleTypes) : Promise<void> {
+        let role  = 'state';
         let unit: string | undefined = undefined;
         switch (type) {
             case 'temperature': {
@@ -163,11 +178,12 @@ class Ico extends utils.Adapter {
             case 'battery': {
                 role = 'value.battery';
                 unit = '%';
-                await this.setObjectNotExistsAsync(device._id + '.lowBat', {
+                await this.setObjectNotExistsAsync(device.uuid + '.lowBat', {
                     type: 'state',
                     common: {
                         name: 'Low battery warning',
                         role: 'indicator.lowbat',
+                        type: 'boolean',
                         read: true,
                         write: false
                     },
@@ -178,11 +194,12 @@ class Ico extends utils.Adapter {
             case 'rssi': {
                 role = 'value.rssi';
                 unit = '%';
-                await this.setObjectNotExistsAsync(device._id + '.offline', {
+                await this.setObjectNotExistsAsync(device.uuid + '.offline', {
                     type: 'state',
                     common: {
                         name: 'Low wifi signal',
                         role: 'indicator.maintenance.unreach',
+                        type: 'boolean',
                         read: true,
                         write: false
                     },
@@ -191,11 +208,12 @@ class Ico extends utils.Adapter {
                 break;
             }
         }
-        const id = device._id + '.' + type;
+        const id  = device.uuid + '.' + type;
         const stateObj = {
             type: 'state',
             common: {
                 name: type,
+                type: 'number',
                 role: role,
                 read: true,
                 write: false,
@@ -203,56 +221,60 @@ class Ico extends utils.Adapter {
             },
             native: {},
         }
-        device.native.hasObjects[type] = true;
+        device.hasObjects[type] = true;
         await this.setObjectNotExistsAsync(id, stateObj as ioBroker.StateObject);
     }
 
-    private async updateMeasurementsOfDevice(device: myDevice){
-        const measures = await this.api!.getLastMeasures(device.native.poolId);
-        const promises: Array<Promise<any> > = [];
-        for (const measure of measures) {
-            if (measure.is_valid) {
-                if (!device.native.hasObjects[measure.data_type]) {
-                    await this.createObjectForMeasurement(device, measure.data_type);
-                }
-                const currState = await this.getStateAsync(device._id + '.' + measure.data_type);
-                if (!currState || currState.ts < measure.value_time.getTime()) {
-                    await this.setStateAsync(device._id + '.' + measure.data_type, {
-                        val: measure.value,
-                        ack: true,
-                        ts: measure.value_time.getTime()
-                    });
-                    if (measure.data_type === 'battery') {
-                        await this.setStateChangedAsync(device._id + '.lowBat', {
-                            val: measure.value < 20, //TODO: evaluate or make configurable...
-                            ack: true,
-                            ts: measure.value_time.getTime()
-                        });
+    private async updateMeasurementsOfDevice(device: myDevice) : Promise<void> {
+        try {
+            const measures = await this.api!.getLastMeasures(device.poolId);
+            const promises: Array<Promise<any>> = [];
+            for (const measure of measures) {
+                if (measure.is_valid) {
+                    if (!device.hasObjects[measure.data_type]) {
+                        await this.createObjectForMeasurement(device, measure.data_type);
                     }
-                    if (measure.data_type === 'rssi') {
-                        await this.setStateChangedAsync(device._id + '.offline', {
-                            val: measure.value < 5, //TODO: evaluate or make configurable...
+                    const currState = await this.getStateAsync(device.uuid + '.' + measure.data_type);
+                    if (!currState || currState.ts < measure.value_time.getTime()) {
+                        await this.setStateAsync(device.uuid + '.' + measure.data_type, {
+                            val: measure.value,
                             ack: true,
                             ts: measure.value_time.getTime()
                         });
+                        if (measure.data_type === 'battery') {
+                            await this.setStateChangedAsync(device.uuid + '.lowBat', {
+                                val: measure.value < 20, //TODO: evaluate or make configurable...
+                                ack: true,
+                                ts: measure.value_time.getTime()
+                            });
+                        }
+                        if (measure.data_type === 'rssi') {
+                            await this.setStateChangedAsync(device.uuid + '.offline', {
+                                val: measure.value < 5, //TODO: evaluate or make configurable...
+                                ack: true,
+                                ts: measure.value_time.getTime()
+                            });
+                        }
+                    } else {
+                        this.log.debug(`Measurement for ${measure.data_type} was already recorded in state db.`);
                     }
                 } else {
-                    this.log.debug(`Measurement for ${measure.data_type} was already recorded in state db.`);
+                    this.log.debug(`Did not read ${measure.data_type} for ${device.poolId} because ${measure.exclusion_reason}`);
                 }
-            } else {
-                this.log.debug(`Did not read ${measure.data_type} for ${device.native.poolId} because ${measure.exclusion_reason}`);
             }
+            await Promise.all(promises);
+        } catch (e) {
+            this.log.warn('Could not get measurements: ' + e);
         }
-        await Promise.all(promises);
     }
 
-    private async poll() {
+    private async poll() : Promise<void> {
         const promises: Array<Promise<any> > = [];
         for (const device of this.devices) {
             promises.push(this.updateMeasurementsOfDevice(device));
         }
         await Promise.all(promises);
-        setTimeout(() => this.poll, this.pollInterval);
+        this.pollTimeout = setTimeout(() => this.poll, this.pollInterval);
     }
 
     /**
@@ -261,10 +283,9 @@ class Ico extends utils.Adapter {
     private onUnload(callback: () => void): void {
         try {
             // Here you must clear all timeouts or intervals that may still be active
-            // clearTimeout(timeout1);
-            // clearTimeout(timeout2);
-            // ...
-            // clearInterval(interval1);
+            if (this.pollTimeout) {
+                clearTimeout(this.pollTimeout);
+            }
 
             callback();
         } catch (e) {

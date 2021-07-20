@@ -86,19 +86,20 @@ export class Api {
                     this.accessToken = response.data.access_token;
                     return true;
                 } else {
-                    this.log.warn('Refresh failed: no token in response!!: ' + JSON.stringify(response.data));
+                    throw new Error('No toke in response. ' + JSON.stringify(response.data));
                 }
             } else {
-                this.log.warn('Refresh failed: ' + response.status + ' - ' + response.statusText);
+                throw new Error(response.status + ' - ' + JSON.stringify(response.data));
             }
         } catch (e) {
             if (axios.isAxiosError(e)) {
-                this.log.warn('Had network error during refresh ' + e);
+                const response = (e as AxiosError).response || {status: 0, data: 'Unknown failure', headers: ''};
+                throw new Error('Could not update token: ' + response.status + ' - ' + JSON.stringify(response.data));
             } else {
                 this.log.error('Unexpected error during refresh: ' + e);
+                throw new Error('Could not update token: ' + e);
             }
         }
-        return false;
     }
 
     private async requestInfo(urlPart: string, method: Method = 'get', triedRefresh = false) : Promise<Record<string, any> | null | string> {
@@ -129,14 +130,14 @@ export class Api {
                     if (refreshWorked) {
                         return this.requestInfo(urlPart, method, true);
                     }
+                    throw new Error('Could not update token: ' + response.status + ' - ' + JSON.stringify(response.data));
                 } else {
-                    this.log.warn(`API Error ${response.status} while getting ${urlPart}: ${response.data} - headers: ${response.headers}`);
+                    throw new Error(`API Error ${response.status} while getting ${urlPart}: ${JSON.stringify(response.data)} - headers: ${JSON.stringify(response.headers)}`);
                 }
             } else {
-                this.log.warn('Unexpected error getting ' + urlPart + ': ' + e.stack);
+                throw new Error('Unexpected error getting ' + urlPart + ': ' + e.stack);
             }
         }
-        return null;
     }
 
 
@@ -218,15 +219,18 @@ export class Api {
     //===========================================================================================================
 
     async getLastMeasures(id: number) : Promise<Array<Measure> > {
-        const data = await this.requestInfo(`pools/${id}/lastmeasures?
+        const data = (await this.requestInfo(`pools/${id}/lastmeasures?
             types[]=temperature&
             types[]=ph&
             types[]=orp&
             types[]=salt&
             types[]=tds&
             types[]=battery&
-            types[]=rssi`);
-        return <Array<Measure> > data;
+            types[]=rssi`)) as Array<Measure>;
+        for (const measure of data) {
+            measure.value_time = new Date(measure.value_time);
+        }
+        return  data;
     }
 
     /**
@@ -236,9 +240,12 @@ export class Api {
      * @param period
      */
     async getMeasures(id: number, type: 'temperature' | 'ph' | 'orp' | 'salt' | 'tds' | 'battery' | 'rssi', period: 'day' | 'week' | 'month') : Promise<Array<Measure> > {
-        const data = await this.requestInfo(`pools/${id}/measure?
+        const data = (await this.requestInfo(`pools/${id}/measure?
             type=${type}&
-            period=${period}`);
+            period=${period}`)) as Array<Measure>;
+        for (const measure of data) {
+            measure.value_time = new Date(measure.value_time);
+        }
         return <Array<Measure> > data;
     }
 
@@ -246,7 +253,12 @@ export class Api {
     // ========== Recommendations:
     //===========================================================================================================
     async getRecommendations(id: number): Promise<Array<Recommendation> > {
-        const data = await this.requestInfo(`pools/${id}/recommendations`);
+        const data = (await this.requestInfo(`pools/${id}/recommendations`)) as Array<Recommendation>;
+        for (const recommendation of data) {
+            recommendation.created_at = new Date(recommendation.created_at);
+            recommendation.updated_at = new Date(recommendation.updated_at);
+            recommendation.deadline = new Date(recommendation.deadline);
+        }
         return <Array<Recommendation> > data;
     }
 
