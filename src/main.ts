@@ -27,7 +27,7 @@ class Ico extends utils.Adapter {
     public constructor(options: Partial<utils.AdapterOptions> = {}) {
         super({
             ...options,
-            name: 'ico',
+            name: 'ico-cloud',
         });
         this.on('ready', this.onReady.bind(this));
         // this.on('stateChange', this.onStateChange.bind(this));
@@ -259,7 +259,7 @@ class Ico extends utils.Adapter {
                         this.log.debug(`Measurement for ${measure.data_type} was already recorded in state db.`);
                     }
                 } else {
-                    this.log.debug(`Did not read ${measure.data_type} for ${device.poolId} because ${measure.exclusion_reason}`);
+                    this.log.debug(`Did not read ${measure.data_type} for ${device.poolId} because ${JSON.stringify(measure.exclusion_reason)}`);
                 }
             }
             await Promise.all(promises);

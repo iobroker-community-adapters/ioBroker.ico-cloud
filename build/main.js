@@ -30,7 +30,7 @@ class Ico extends utils.Adapter {
     constructor(options = {}) {
         super({
             ...options,
-            name: 'ico',
+            name: 'ico-cloud',
         });
         this.pollInterval = 0;
         this.devices = [];
@@ -256,7 +256,7 @@ class Ico extends utils.Adapter {
                     }
                 }
                 else {
-                    this.log.debug(`Did not read ${measure.data_type} for ${device.poolId} because ${measure.exclusion_reason}`);
+                    this.log.debug(`Did not read ${measure.data_type} for ${device.poolId} because ${JSON.stringify(measure.exclusion_reason)}`);
                 }
             }
             await Promise.all(promises);
