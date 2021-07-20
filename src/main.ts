@@ -133,7 +133,7 @@ class Ico extends utils.Adapter {
 
             //if we still have devices, those are not in the cloud anymore -> remove.
             for (const device of devices) {
-                this.log.debug('Deleting device ' + device.common.name);
+                this.log.debug('Deleting device ' + device._id);
                 await this.deleteDeviceAsync(device._id.split('.').pop() as string); //does this work as intended??
                 /*const objectsToDelete = await this.getObjectListAsync({startkey: device._id + '.', endkey: device._id + '.\u9999'});
                 const promises = [];
