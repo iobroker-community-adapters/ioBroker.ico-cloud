@@ -209,7 +209,7 @@ class Ico extends utils.Adapter {
             }
         }
         const id  = device.uuid + '.' + type;
-        const stateObj = {
+        const stateObj : ioBroker.SettableObject = {
             type: 'state',
             common: {
                 name: type,
@@ -222,7 +222,7 @@ class Ico extends utils.Adapter {
             native: {},
         }
         device.hasObjects[type] = true;
-        await this.setObjectNotExistsAsync(id, stateObj as ioBroker.StateObject);
+        await this.setObjectNotExistsAsync(id, stateObj);
     }
 
     private async updateMeasurementsOfDevice(device: myDevice) : Promise<void> {
