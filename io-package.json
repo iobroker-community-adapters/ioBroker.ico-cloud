@@ -95,7 +95,7 @@
         ]
     },
     "native": {
-        "pollinterval": 15,
+        "pollinterval": 60,
         "refreshToken": "",
         "accessToken": ""
     },
