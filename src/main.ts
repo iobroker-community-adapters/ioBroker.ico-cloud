@@ -236,6 +236,7 @@ class Ico extends utils.Adapter {
                     }
                     const currState = await this.getStateAsync(device.uuid + '.' + measure.data_type);
                     if (!currState || currState.ts < measure.value_time.getTime()) {
+                        this.log.debug(`Got new Measurement for ${measure.data_type}: ${measure.value}`);
                         await this.setStateAsync(device.uuid + '.' + measure.data_type, {
                             val: measure.value,
                             ack: true,
@@ -269,12 +270,17 @@ class Ico extends utils.Adapter {
     }
 
     private async poll() : Promise<void> {
+        this.log.debug('Polling');
         const promises: Array<Promise<any> > = [];
         for (const device of this.devices) {
             promises.push(this.updateMeasurementsOfDevice(device));
         }
         await Promise.all(promises);
-        this.pollTimeout = setTimeout(() => this.poll, this.pollInterval);
+        this.log.debug(`Update done. Polling again in ${this.pollInterval}`);
+        this.pollTimeout = setTimeout(() => {
+            clearTimeout(this.pollTimeout as NodeJS.Timeout);
+            this.poll();
+        }, this.pollInterval);
     }
 
     /**
