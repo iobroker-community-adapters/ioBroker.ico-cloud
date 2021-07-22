@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "ico-cloud",
-        "version": "0.0.3",
+        "version": "0.0.4",
         "news": {
+            "0.0.4": {
+                "en": "change default poll interfal to one hour, because it seems no more measurements are done.\nfixed issue in polling",
+                "de": "Ändern Sie das Standard-Polling-Interfal auf eine Stunde, da anscheinend keine Messungen mehr durchgeführt werden.\nProblem bei Umfragen behoben",
+                "ru": "измените интервал опроса по умолчанию на один час, потому что кажется, что измерения больше не проводятся.\nисправлена проблема в опросе",
+                "pt": "mude o intervalo de pesquisa padrão para uma hora, porque parece que não foram feitas mais medições.\nproblema corrigido na votação",
+                "nl": "verander standaard poll interfal naar één uur, omdat het lijkt alsof er geen metingen meer worden gedaan.\nopgelost probleem in polling",
+                "fr": "changez l'intervalle de sondage par défaut à une heure, car il semble qu'aucune autre mesure ne soit effectuée.\nproblème résolu dans les sondages",
+                "it": "cambia l'intervallo di polling predefinito a un'ora, perché sembra che non vengano più eseguite misurazioni.\nproblema risolto nei sondaggi",
+                "es": "cambie el intervalo de sondeo predeterminado a una hora, porque parece que no se realizan más mediciones.\nproblema solucionado en la votación",
+                "pl": "zmień domyślny interfal sondy na jedną godzinę, ponieważ wydaje się, że nie są wykonywane żadne dalsze pomiary.\nnaprawiony problem w ankietach",
+                "zh-cn": "将默认轮询间隔更改为一小时，因为似乎不再进行测量。\n固定投票问题"
+            },
             "0.0.3": {
                 "en": "Rename to ico-cloud",
                 "de": "Umbenennen in ico-cloud",
