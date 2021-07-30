@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "ico-cloud",
-        "version": "0.0.4",
+        "version": "0.0.5",
         "news": {
+            "0.0.5": {
+                "en": "add necessary admin dependency.\nDo not use unknown roles.",
+                "de": "fügen Sie die erforderliche Admin-Abhängigkeit hinzu.\nVerwenden Sie keine unbekannten Rollen.",
+                "ru": "добавить необходимую админ-зависимость.\nНе используйте неизвестные роли.",
+                "pt": "adicione a dependência administrativa necessária.\nNão use funções desconhecidas.",
+                "nl": "voeg de nodige beheerdersafhankelijkheid toe.\nGebruik geen onbekende rollen.",
+                "fr": "ajouter la dépendance d'administrateur nécessaire.\nN'utilisez pas de rôles inconnus.",
+                "it": "aggiungere la dipendenza amministratore necessaria.\nNon utilizzare ruoli sconosciuti.",
+                "es": "agregue la dependencia administrativa necesaria.\nNo utilice roles desconocidos.",
+                "pl": "dodaj niezbędną zależność administratora.\nNie używaj nieznanych ról.",
+                "zh-cn": "添加必要的管理员依赖项。\n不要使用未知角色。"
+            },
             "0.0.4": {
                 "en": "change default poll interfal to one hour, because it seems no more measurements are done.\nfixed issue in polling",
                 "de": "Ändern Sie das Standard-Polling-Interfal auf eine Stunde, da anscheinend keine Messungen mehr durchgeführt werden.\nProblem bei Umfragen behoben",
