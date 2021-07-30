@@ -32,8 +32,11 @@ Icon and name of ICO and Ondilo are property of Ondilo.
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+* (Garfonso) add necessary admin dependency.
+
 ### 0.0.4 (2021-07-22)
-* (Garfonso) change default poll interfal to one hour, because it seems no more measurements are done.
+* (Garfonso) change default poll interval to one hour, because it seems no more measurements are done.
 * (Garfonso) fixed issue in polling
 
 ### 0.0.3 (2021-07-20)
