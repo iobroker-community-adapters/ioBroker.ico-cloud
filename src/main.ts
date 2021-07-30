@@ -278,7 +278,6 @@ class Ico extends utils.Adapter {
         await Promise.all(promises);
         this.log.debug(`Update done. Polling again in ${this.pollInterval}`);
         this.pollTimeout = setTimeout(() => {
-            clearTimeout(this.pollTimeout as NodeJS.Timeout);
             this.poll();
         }, this.pollInterval);
     }
