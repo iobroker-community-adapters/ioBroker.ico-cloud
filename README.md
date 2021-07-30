@@ -34,6 +34,7 @@ Icon and name of ICO and Ondilo are property of Ondilo.
 -->
 ### **WORK IN PROGRESS**
 * (Garfonso) add necessary admin dependency.
+* (Garfonso) Do not use unknown roles.
 
 ### 0.0.4 (2021-07-22)
 * (Garfonso) change default poll interval to one hour, because it seems no more measurements are done.
