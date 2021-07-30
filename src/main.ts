@@ -157,21 +157,21 @@ class Ico extends utils.Adapter {
                 break;
             }
             case 'ph': {
-                role = 'value.ph'
+                role = 'state'
                 break;
             }
             case 'orp': {
-                role = 'value.orp';
+                role = 'state';
                 unit = 'mV';
                 break;
             }
             case 'salt': {
-                role = 'value.salt';
+                role = 'state';
                 unit = 'mg/L';
                 break;
             }
             case 'tds': {
-                role = 'value.tds';
+                role = 'state';
                 unit = 'ppm';
                 break;
             }
