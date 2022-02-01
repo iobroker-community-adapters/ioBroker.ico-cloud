@@ -21,7 +21,7 @@
   },
   "dependencies": {
     "@iobroker/adapter-core": "^2.5.1",
-    "axios": "^0.21.2",
+    "axios": "^0.25.0",
     "react-simple-oauth2-login": "^0.5.3"
   },
   "devDependencies": {
