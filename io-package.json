@@ -112,6 +112,7 @@
         "connectionType": "cloud",
         "dataSource": "poll",
         "materialize": true,
+        "eraseOnUpload": true,
         "globalDependencies": [
             {
                 "admin": ">=4.0.9"
@@ -129,6 +130,10 @@
         "accessToken": ""
     },
     "encryptedNative": [
+        "refreshToken",
+        "accessToken"
+    ],
+    "protectedNative": [
         "refreshToken",
         "accessToken"
     ],
