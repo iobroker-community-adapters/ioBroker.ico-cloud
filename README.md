@@ -1,4 +1,4 @@
-![Logo](admin.ico-cloud.png)
+![Logo](admin/ico-cloud.png)
 # ioBroker.ico-cloud
 
 [![NPM version](https://img.shields.io/npm/v/iobroker.ico-cloud.svg)](https://www.npmjs.com/package/iobroker.ico-cloud)
