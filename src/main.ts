@@ -347,8 +347,8 @@ class Ico extends utils.Adapter {
 
 if (require.main !== module) {
     // Export the constructor in compact mode
-    module.exports = (options: Partial<utils.AdapterOptions> | undefined) => new Ico(options);
+    module.exports = (options: Partial<utils.AdapterOptions> | undefined) => new IcoCloud(options);
 } else {
     // otherwise start the instance directly
-    (() => new Ico())();
+    (() => new IcoCloud())();
 }
