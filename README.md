@@ -1,10 +1,10 @@
-![Logo](admin.ico-cloud.png)
+![Logo](admin/ico-cloud.png)
 # ioBroker.ico-cloud
 
 [![NPM version](https://img.shields.io/npm/v/iobroker.ico-cloud.svg)](https://www.npmjs.com/package/iobroker.ico-cloud)
 [![Downloads](https://img.shields.io/npm/dm/iobroker.ico-cloud.svg)](https://www.npmjs.com/package/iobroker.ico-cloud)
-![Number of Installations (latest)](https://iobroker.live/badges.ico-cloud-installed.svg)
-![Number of Installations (stable)](https://iobroker.live/badges.ico-cloud-stable.svg)
+![Number of Installations](https://iobroker.live/badges/ico-cloud-installed.svg)
+![Current version in stable repository](https://iobroker.live/badges/ico-cloud-stable.svg)
 [![Dependency Status](https://img.shields.io/david/iobroker-community-adapters/iobroker.ico-cloud.svg)](https://david-dm.org/iobroker-community-adapters/iobroker.ico-cloud)
 
 [![NPM](https://nodei.co/npm/iobroker.ico-cloud.png?downloads=true)](https://nodei.co/npm/iobroker.ico-cloud/)
@@ -49,7 +49,7 @@ Icon and name of ICO and Ondilo are property of Ondilo.
 ## License
 MIT License
 
-Copyright (c) 2021 Garfonso <garfonso@mobo.info>
+Copyright (c) 2022 Garfonso <garfonso@mobo.info>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
