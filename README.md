@@ -32,6 +32,9 @@ Icon and name of ICO and Ondilo are property of Ondilo.
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+* (Garfonso) changed adapter to be schedule adapter.
+
 ### 0.0.7 (2022-07-01)
 * (Garfonso) more dependencies & administrative stuff.
 
