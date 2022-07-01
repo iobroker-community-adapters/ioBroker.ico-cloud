@@ -81,7 +81,7 @@
     "test:unit": "mocha test/unit --exit",
     "test:integration": "mocha test/integration --exit",
     "test": "npm run test:ts && npm run test:package",
-    "check": "tsc --noEmit",
+    "check": "tsc --noEmit --jsx react",
     "lint": "eslint --ext .ts,.tsx src/ admin/src/",
     "translate": "translate-adapter",
     "release": "release-script"
