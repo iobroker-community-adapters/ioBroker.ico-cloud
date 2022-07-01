@@ -1,8 +1,20 @@
 {
   "common": {
     "name": "ico-cloud",
-    "version": "0.0.7",
+    "version": "1.0.0",
     "news": {
+      "1.0.0": {
+        "en": "changed adapter to be schedule adapter.",
+        "de": "geänderter adapter als zeitplanadapter.",
+        "ru": "измененный адаптер, чтобы быть адаптером расписания.",
+        "pt": "adaptador alterado para ser o adaptador de programação.",
+        "nl": "veranderde adapter om schemaadapter te zijn.",
+        "fr": "l'adaptateur modifié pour être l'adaptateur horaire.",
+        "it": "adattatore modificato per essere adattatore di pianificazione.",
+        "es": "adaptador cambiado para ser adaptador de programación.",
+        "pl": "zmieniono adapter do adaptowania harmonogramu.",
+        "zh-cn": "调整者改为时间表。."
+      },
       "0.0.7": {
         "en": "more dependencies & administrative stuff.",
         "de": "mehr abhängigkeiten und administrative sachen.",
@@ -74,18 +86,6 @@
         "es": "* Versión inicial\n\n## Licencia\nLicencia MIT\n\nCopyright (c) 2021 Garfonso <garfonso@mobo.info>\n\nPor la presente se otorga permiso, sin cargo, a cualquier persona que obtenga una copia.\nde este software y los archivos de documentación asociados (el \"Software\"), para tratar\nen el Software sin restricción, incluidos, entre otros, los derechos\npara usar, copiar, modificar, fusionar, publicar, distribuir, sublicenciar y / o vender\ncopias del Software, y para permitir a las personas a las que el Software es\namueblado para ello, sujeto a las siguientes condiciones:\n\nEl aviso de copyright anterior y este aviso de permiso se incluirán en todos\ncopias o partes sustanciales del Software.\n\nEL SOFTWARE SE PROPORCIONA \"TAL CUAL\", SIN GARANTÍA DE NINGÚN TIPO, EXPRESA O\nIMPLÍCITAS, INCLUIDAS PERO NO LIMITADAS A LAS GARANTÍAS DE COMERCIABILIDAD,\nAPTITUD PARA UN PROPÓSITO PARTICULAR Y NO INFRACCIÓN. EN NINGÚN CASO\nLOS AUTORES O TITULARES DE LOS DERECHOS DE AUTOR SERÁN RESPONSABLES DE CUALQUIER RECLAMO, DAÑOS U OTROS\nRESPONSABILIDAD, YA SEA EN UNA ACCIÓN DE CONTRATO, AGRAVIO O DE OTRO MODO, QUE SURJA DE,\nFUERA O EN RELACIÓN CON EL SOFTWARE O EL USO U OTROS NEGOCIOS EN EL\nSOFTWARE.",
         "pl": "* Pierwsze wydanie\n\n## Licencja\nLicencja MIT\n\nPrawa autorskie (c) 2021 Garfonso <garfonso@mobo.info>\n\nNiniejszym udziela się nieodpłatnego zezwolenia każdej osobie otrzymującej kopię\ntego oprogramowania i związanych z nim plików dokumentacji („Oprogramowanie”), aby handlować\nw Oprogramowaniu bez ograniczeń, w tym bez ograniczeń praw\nużywać, kopiować, modyfikować, łączyć, publikować, rozpowszechniać, udzielać sublicencji i/lub sprzedawać\nkopie Oprogramowania oraz do zezwolenia osobom, dla których Oprogramowanie jest\nw tym celu, z zastrzeżeniem następujących warunków:\n\nPowyższa informacja o prawach autorskich i niniejsza informacja o pozwoleniu będą zawarte we wszystkich\nkopie lub istotne części Oprogramowania.\n\nOPROGRAMOWANIE JEST DOSTARCZANE „TAK JAK JEST”, BEZ JAKICHKOLWIEK GWARANCJI, WYRAŹNYCH LUB\nDOROZUMIANYCH, W TYM MIĘDZY INNYMI GWARANCJE WARTOŚCI HANDLOWEJ,\nPRZYDATNOŚĆ DO OKREŚLONEGO CELU I NIENARUSZALNOŚCI. W ŻADNYM WYPADKU NIE\nAUTORZY LUB POSIADACZE PRAW AUTORSKICH PONOSZĄ ODPOWIEDZIALNOŚĆ ZA WSZELKIE ROSZCZENIA, SZKODY LUB INNE\nODPOWIEDZIALNOŚĆ UMOWNA, CZYNNA LUB W INNY SPOSÓB, WYNIKAJĄCA Z,\nNIE ZWIĄZANE Z OPROGRAMOWANIEM LUB KORZYSTANIEM LUB INNYMI CZYNNOŚCIAMI W\nOPROGRAMOWANIE.",
         "zh-cn": "* 初始发行\n\n＃＃ 执照\n麻省理工学院执照\n\n版权所有 (c) 2021 Garfonso <garfonso@mobo.info>\n\n特此向任何获得副本的人免费授予许可\n本软件和相关文档文件（“软件”），以处理\n在软件中不受限制，包括但不限于权利\n使用、复制、修改、合并、发布、分发、再许可和/或出售\n软件的副本，并允许软件的接收者\n提供这样做，但须符合以下条件：\n\n以上版权声明和本许可声明应包含在所有\n软件的副本或重要部分。\n\n该软件“按原样”提供，不提供任何形式的明示或保证\n暗示，包括但不限于适销性保证，\n适用于特定目的且不侵权。在任何情况下都不得\n作者或版权持有人应对任何索赔、损害或其他\n责任，无论是在合同诉讼、侵权行为或其他方面，由以下原因引起的，\n与本软件或本软件中的使用或其他交易无关或与之相关\n软件。"
-      },
-      "0.0.1": {
-        "en": "initial release",
-        "de": "Erstveröffentlichung",
-        "ru": "Начальная версия",
-        "pt": "lançamento inicial",
-        "nl": "Eerste uitgave",
-        "fr": "Première version",
-        "it": "Versione iniziale",
-        "es": "Versión inicial",
-        "pl": "Pierwsze wydanie",
-        "zh-cn": "首次出版"
       }
     },
     "titleLang": {
