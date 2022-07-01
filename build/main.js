@@ -16,7 +16,7 @@ var __copyProps = (to, from, except, desc) => {
 var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target, mod));
 var utils = __toESM(require("@iobroker/adapter-core"));
 var import_api = require("./lib/api");
-class Ico extends utils.Adapter {
+class IcoCloud extends utils.Adapter {
   constructor(options = {}) {
     super({
       ...options,
@@ -257,8 +257,8 @@ class Ico extends utils.Adapter {
   }
 }
 if (require.main !== module) {
-  module.exports = (options) => new Ico(options);
+  module.exports = (options) => new IcoCloud(options);
 } else {
-  (() => new Ico())();
+  (() => new IcoCloud())();
 }
 //# sourceMappingURL=main.js.map

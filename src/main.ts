@@ -18,7 +18,7 @@ interface myDevice {
     uuid: string
 }
 
-class Ico extends utils.Adapter {
+class IcoCloud extends utils.Adapter {
     private api?: Api;
     private pollInterval = 0;
     private devices: Array<myDevice> = [];
