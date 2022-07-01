@@ -1,6 +1,6 @@
 {
     "cli": true,
-    "adapterName": "ico",
+    "adapterName": "ico-cloud",
     "title": "ICO Poolsensor",
     "description": "ICO Poolsensor allow to monitor the state of the water in your pool and recommends actions to take.",
     "keywords": [
