@@ -1,8 +1,20 @@
 {
   "common": {
     "name": "ico-cloud",
-    "version": "0.0.6",
+    "version": "0.0.7",
     "news": {
+      "0.0.7": {
+        "en": "more dependencies & administrative stuff.",
+        "de": "mehr abhängigkeiten und administrative sachen.",
+        "ru": "больше зависимостей и административных вещей.",
+        "pt": "mais dependências e coisas administrativas.",
+        "nl": "meer afhankelijke dingen.",
+        "fr": "plus de dépendances et de choses administratives.",
+        "it": "più dipendenze e cose amministrative.",
+        "es": "más dependencias y cosas administrativas.",
+        "pl": "wymagania i administracyjne.",
+        "zh-cn": "更加依赖和管理障碍。."
+      },
       "0.0.6": {
         "en": "dependencies & updates",
         "de": "abhängigkeiten & updates",
