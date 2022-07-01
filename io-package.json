@@ -115,7 +115,7 @@
         "eraseOnUpload": true,
         "globalDependencies": [
             {
-                "admin": ">=4.0.9"
+                "admin": ">=4.0.10"
             }
         ],
         "dependencies": [
