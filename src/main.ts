@@ -7,7 +7,6 @@
 import * as utils from '@iobroker/adapter-core';
 
 import {Api, PossibleTypes} from './lib/api';
-import {adapter} from '@iobroker/adapter-core';
 
 // Load your modules here, e.g.:
 // import * as fs from "fs";
