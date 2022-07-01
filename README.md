@@ -32,7 +32,7 @@ Icon and name of ICO and Ondilo are property of Ondilo.
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 0.0.6 (2022-07-01)
 * (Garfonso) dependencies & updates
 
 ### 0.0.5 (2021-07-30)
