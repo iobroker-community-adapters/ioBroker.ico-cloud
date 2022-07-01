@@ -23,6 +23,7 @@ class IcoCloud extends utils.Adapter {
     private pollInterval = 0;
     private devices: Array<myDevice> = [];
     private pollTimeout : NodeJS.Timeout | null = null;
+    private unloaded = false;
 
     public constructor(options: Partial<utils.AdapterOptions> = {}) {
         super({
@@ -34,6 +35,12 @@ class IcoCloud extends utils.Adapter {
         // this.on('objectChange', this.onObjectChange.bind(this));
         // this.on('message', this.onMessage.bind(this));
         this.on('unload', this.onUnload.bind(this));
+    }
+
+    private async sleep(ms: number): Promise<void> {
+        return new Promise((resolve) => {
+            setTimeout(() => { !this.unloaded && resolve() }, ms);
+        });
     }
 
     /**
@@ -51,6 +58,7 @@ class IcoCloud extends utils.Adapter {
                 updateConfig = true;
             }
             if (instanceObject.common.schedule === undefined || instanceObject.common.schedule === '59 * * * *') {
+                this.log.info('Default schedule found and adjusted to spread calls better over the full hour.');
                 instanceObject.common.schedule = Math.floor(Math.random() * 60) + ' * * * *';
                 updateConfig = true;
             }
@@ -59,6 +67,10 @@ class IcoCloud extends utils.Adapter {
                 await this.setForeignObjectAsync(instanceObject._id, instanceObject);
             }
         }
+
+        const delay = Math.floor(Math.random() * 30000);
+        this.log.debug(`Delay execution by ${delay}ms to better spread API calls`);
+        await this.sleep(delay);
 
         if (this.config.refreshToken) {
             this.api = new Api({
@@ -298,6 +310,7 @@ class IcoCloud extends utils.Adapter {
      */
     private onUnload(callback: () => void): void {
         try {
+            this.unloaded = true;
             callback();
         } catch (e) {
             callback();

@@ -25,8 +25,16 @@ class IcoCloud extends utils.Adapter {
     this.pollInterval = 0;
     this.devices = [];
     this.pollTimeout = null;
+    this.unloaded = false;
     this.on("ready", this.onReady.bind(this));
     this.on("unload", this.onUnload.bind(this));
+  }
+  async sleep(ms) {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        !this.unloaded && resolve();
+      }, ms);
+    });
   }
   async onReady() {
     const instanceObject = await this.getForeignObjectAsync("system.adapter." + this.namespace);
@@ -37,6 +45,7 @@ class IcoCloud extends utils.Adapter {
         updateConfig = true;
       }
       if (instanceObject.common.schedule === void 0 || instanceObject.common.schedule === "59 * * * *") {
+        this.log.info("Default schedule found and adjusted to spread calls better over the full hour.");
         instanceObject.common.schedule = Math.floor(Math.random() * 60) + " * * * *";
         updateConfig = true;
       }
@@ -45,6 +54,9 @@ class IcoCloud extends utils.Adapter {
         await this.setForeignObjectAsync(instanceObject._id, instanceObject);
       }
     }
+    const delay = Math.floor(Math.random() * 3e4);
+    this.log.debug(`Delay execution by ${delay}ms to better spread API calls`);
+    await this.sleep(delay);
     if (this.config.refreshToken) {
       this.api = new import_api.Api({
         accessToken: this.config.accessToken,
@@ -260,6 +272,7 @@ class IcoCloud extends utils.Adapter {
   }
   onUnload(callback) {
     try {
+      this.unloaded = true;
       callback();
     } catch (e) {
       callback();
