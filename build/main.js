@@ -41,7 +41,7 @@ class IcoCloud extends utils.Adapter {
         updateConfig = true;
       }
       if (updateConfig) {
-        this.log.debug("Updating configuration.");
+        this.log.debug("Updating configuration, new schedule: " + instanceObject.common.schedule);
         await this.setForeignObjectAsync(instanceObject._id, instanceObject);
       }
     }
