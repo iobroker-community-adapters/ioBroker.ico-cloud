@@ -39,5 +39,7 @@
     "license": "MIT License",
     "ci": "gh-actions",
     "dependabot": "yes",
-    "creatorVersion": "1.34.1"
+    "creatorVersion": "2.1.1",
+    "replay": "/home/achim/development/iobroker/ioBroker.ico-cloud/.create-adapter.json",
+    "defaultBranch": "main"
 }
