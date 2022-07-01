@@ -130,7 +130,9 @@
     "extIcon": "https://raw.githubusercontent.com/iobroker-community-adapters/ioBroker.ico-cloud/main/admin/ico-cloud.png",
     "readme": "https://github.com/iobroker-community-adapters/ioBroker.ico-cloud/blob/main/README.md",
     "loglevel": "info",
-    "mode": "daemon",
+    "mode": "schedule",
+    "schedule": "59 * * * *",
+    "allowInit": true,
     "type": "metering",
     "compact": true,
     "connectionType": "cloud",
@@ -149,7 +151,6 @@
     ]
   },
   "native": {
-    "pollinterval": 60,
     "refreshToken": "",
     "accessToken": ""
   },

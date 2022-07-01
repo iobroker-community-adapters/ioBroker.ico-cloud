@@ -29,21 +29,37 @@ class IcoCloud extends utils.Adapter {
     this.on("unload", this.onUnload.bind(this));
   }
   async onReady() {
-    this.log.info("Configured pollinterval: " + this.config.pollinterval);
+    const instanceObject = await this.getForeignObjectAsync("system.adapter." + this.namespace);
+    if (instanceObject) {
+      let updateConfig = false;
+      if (instanceObject.common.mode !== "schedule") {
+        instanceObject.common.mode = "schedule";
+        updateConfig = true;
+      }
+      if (instanceObject.common.schedule === void 0 || instanceObject.common.schedule === "59 * * * *") {
+        instanceObject.common.schedule = Math.floor(Math.random() * 60) + " * * * *";
+        updateConfig = true;
+      }
+      if (updateConfig) {
+        this.log.debug("Updating configuration.");
+        await this.setForeignObjectAsync(instanceObject._id, instanceObject);
+      }
+    }
     if (this.config.refreshToken) {
       this.api = new import_api.Api({
         accessToken: this.config.accessToken,
         refreshToken: this.config.refreshToken,
         log: this.log
       });
+      this.log.debug("updating devices.");
       await this.updateDevices();
-      if (this.config.pollinterval) {
-        this.pollInterval = Math.max(1, this.config.pollinterval) * 60 * 1e3;
-        await this.poll();
-      }
+      this.log.debug("updating values.");
+      await this.poll();
     } else {
       this.log.info("Not authorized, yet. Please see configuration.");
     }
+    this.log.debug("All done. Exit.");
+    this.terminate();
   }
   async updateDevices() {
     const devices = await this.getDevicesAsync();
@@ -240,16 +256,10 @@ class IcoCloud extends utils.Adapter {
       promises.push(this.updateMeasurementsOfDevice(device));
     }
     await Promise.all(promises);
-    this.log.debug(`Update done. Polling again in ${this.pollInterval}`);
-    this.pollTimeout = setTimeout(() => {
-      this.poll();
-    }, this.pollInterval);
+    this.log.debug(`Update done.`);
   }
   onUnload(callback) {
     try {
-      if (this.pollTimeout) {
-        clearTimeout(this.pollTimeout);
-      }
       callback();
     } catch (e) {
       callback();

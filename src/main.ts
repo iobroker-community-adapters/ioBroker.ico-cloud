@@ -7,6 +7,7 @@
 import * as utils from '@iobroker/adapter-core';
 
 import {Api, PossibleTypes} from './lib/api';
+import {adapter} from '@iobroker/adapter-core';
 
 // Load your modules here, e.g.:
 // import * as fs from "fs";
@@ -42,10 +43,23 @@ class IcoCloud extends utils.Adapter {
     private async onReady(): Promise<void> {
         // Initialize your adapter here
 
-        // The adapters config (in the instance object everything under the attribute "native") is accessible via
-        // this.config:
-        this.log.info('Configured pollinterval: ' + this.config.pollinterval);
-        //this.log.info('refreshToken: ' + this.config.refreshToken);
+        //update from daemon to schedule and maybe set random schedule.
+        const instanceObject = await this.getForeignObjectAsync('system.adapter.' + this.namespace);
+        if (instanceObject) {
+            let updateConfig = false;
+            if (instanceObject.common.mode !== 'schedule') {
+                instanceObject.common.mode = 'schedule';
+                updateConfig = true;
+            }
+            if (instanceObject.common.schedule === undefined || instanceObject.common.schedule === '59 * * * *') {
+                instanceObject.common.schedule = Math.floor(Math.random() * 60) + ' * * * *';
+                updateConfig = true;
+            }
+            if (updateConfig) {
+                this.log.debug('Updating configuration.');
+                await this.setForeignObjectAsync(instanceObject._id, instanceObject);
+            }
+        }
 
         if (this.config.refreshToken) {
             this.api = new Api({
@@ -54,15 +68,16 @@ class IcoCloud extends utils.Adapter {
                 log: this.log
             });
 
+            this.log.debug('updating devices.');
             await this.updateDevices();
-
-            if (this.config.pollinterval) {
-                this.pollInterval = Math.max(1, this.config.pollinterval) * 60 * 1000; //convert from minutes to milliseconds.
-                await this.poll();
-            }
+            this.log.debug('updating values.');
+            await this.poll();
         } else {
             this.log.info('Not authorized, yet. Please see configuration.');
         }
+
+        this.log.debug('All done. Exit.');
+        this.terminate();
     }
 
     private async updateDevices() : Promise<void> {
@@ -276,10 +291,7 @@ class IcoCloud extends utils.Adapter {
             promises.push(this.updateMeasurementsOfDevice(device));
         }
         await Promise.all(promises);
-        this.log.debug(`Update done. Polling again in ${this.pollInterval}`);
-        this.pollTimeout = setTimeout(() => {
-            this.poll();
-        }, this.pollInterval);
+        this.log.debug(`Update done.`);
     }
 
     /**
@@ -287,11 +299,6 @@ class IcoCloud extends utils.Adapter {
      */
     private onUnload(callback: () => void): void {
         try {
-            // Here you must clear all timeouts or intervals that may still be active
-            if (this.pollTimeout) {
-                clearTimeout(this.pollTimeout);
-            }
-
             callback();
         } catch (e) {
             callback();
@@ -342,6 +349,7 @@ class IcoCloud extends utils.Adapter {
     //         }
     //     }
     // }
+
 
 }
 

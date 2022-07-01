@@ -4,7 +4,6 @@
 declare global {
     namespace ioBroker {
         interface AdapterConfig {
-            pollinterval: number;
             refreshToken: string;
             accessToken: string;
         }

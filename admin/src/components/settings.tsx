@@ -191,7 +191,6 @@ class Settings extends React.Component<SettingsProps, SettingsState> {
         return (
             <form className={this.props.classes.tab}>
                 {this.renderMessage()}
-                {this.renderInput('labelPollinterval', 'pollinterval', 'number')}
 
                 <OAuth2Login
                     authorizationUrl="https://interop.ondilo.com/oauth2/authorize"
@@ -212,5 +211,6 @@ class Settings extends React.Component<SettingsProps, SettingsState> {
         );
     }
 }
+
 
 export default withStyles(styles)(Settings);
