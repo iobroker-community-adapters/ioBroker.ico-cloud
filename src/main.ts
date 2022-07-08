@@ -286,6 +286,7 @@ class IcoCloud extends utils.Adapter {
                         this.log.debug(`Measurement for ${measure.data_type} was already recorded in state db.`);
                     }
                 } else {
+                    //can be {"slug":"ICO_OUT_OF_WATER"} -> maybe record to some error state?
                     this.log.debug(`Did not read ${measure.data_type} for ${device.poolId} because ${JSON.stringify(measure.exclusion_reason)}`);
                 }
             }
