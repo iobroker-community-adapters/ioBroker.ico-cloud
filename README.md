@@ -61,7 +61,7 @@ Icon and name of ICO and Ondilo are property of Ondilo.
 ## License
 MIT License
 
-Copyright (c) 2022 Garfonso <garfonso@mobo.info>
+Copyright (c) 2023 Garfonso <garfonso@mobo.info>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
