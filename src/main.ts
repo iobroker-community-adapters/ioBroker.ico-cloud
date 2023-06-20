@@ -2,6 +2,8 @@
  * Created with @iobroker/create-adapter v2.1.1
  */
 
+//Api Documentation: https://interop.ondilo.com/docs/api/customer/v1/
+
 // The adapter-core module gives you access to the core ioBroker functions
 // you need to create an adapter
 import * as utils from '@iobroker/adapter-core';
@@ -80,7 +82,11 @@ class IcoCloud extends utils.Adapter {
             });
 
             this.log.debug('updating devices.');
-            await this.updateDevices();
+            try {
+                await this.updateDevices();
+            } catch (e) {
+                this.log.info('Could not update devices -> will try to update measurements with known devices anyway.');
+            }
             this.log.debug('updating values.');
             await this.poll();
         } else {
@@ -94,10 +100,27 @@ class IcoCloud extends utils.Adapter {
     private async updateDevices() : Promise<void> {
         const devices = await this.getDevicesAsync();
 
+        let poolArray : any[];
+        let deleteAllowed = true;
         try {
-            const poolArray = await this.api!.getPools();
-            for (const pool of poolArray) {
-                if (pool.id) {
+            poolArray = await this.api!.getPools();
+        } catch (e) {
+            this.log.warn('Could not update pool list: ' + e + '. Trying to update know pools instead. If this happens a lot, try to login again.');
+            poolArray = [];
+            for (const device of devices) {
+                if (device.native.id) {
+                    poolArray.push({id: device.native.id});
+                } else {
+                    this.log.warn('Pool ' + device.common.name + ' is missing device id. Will not be able to update.');
+                    deleteAllowed = false;
+                }
+            }
+        }
+
+        //now get information about each pool.
+        for (const pool of poolArray) {
+            if (pool.id) {
+                try {
                     const icoDevice = await this.api!.getDevice(pool.id);
 
                     let found = false;
@@ -154,22 +177,29 @@ class IcoCloud extends utils.Adapter {
                         });
                         await this.setObjectAsync(id, deviceObj);
                     }
+                } catch (e) {
+                    this.log.error(`Could not update pool ${pool.id}: ` + e + '. If network error, retry later. Otherwise, please try to login again.');
+                    deleteAllowed = false;
                 }
             }
+        }
 
-            //if we still have devices, those are not in the cloud anymore -> remove.
+        //if we still have devices, those are not in the cloud anymore -> remove.
+        if (deleteAllowed) {
             for (const device of devices) {
                 this.log.debug('Deleting device ' + device._id);
-                await this.deleteDeviceAsync(device._id.split('.').pop() as string); //does this work as intended??
-                /*const objectsToDelete = await this.getObjectListAsync({startkey: device._id + '.', endkey: device._id + '.\u9999'});
-                const promises = [];
-                for (const obj of objectsToDelete) {
-                    promises.push(this.delObjectAsync(obj._id));
-                }*/
+                await this.delObjectAsync(device._id.split('.').pop() as string, {recursive: true});
             }
-        } catch (e) {
-            this.log.error('Could not update devices: ' + e + '. If network error, retry later. Otherwise, please try to login again.');
-            this.terminate('Could not update devices.', utils.EXIT_CODES.ADAPTER_REQUESTED_TERMINATION);
+        } else {
+            //fill this.devices from remaining objects:
+            for (const deviceObj of devices) {
+                this.devices.push({
+                    poolId: deviceObj.native.poolId,
+                    swVersion: deviceObj.native.swVersion,
+                    hasObjects: {},
+                    uuid: deviceObj._id.split('.').pop() || ''
+                });
+            }
         }
     }
 

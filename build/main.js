@@ -67,7 +67,11 @@ class IcoCloud extends utils.Adapter {
         log: this.log
       });
       this.log.debug("updating devices.");
-      await this.updateDevices();
+      try {
+        await this.updateDevices();
+      } catch (e) {
+        this.log.info("Could not update devices -> will try to update measurements with known devices anyway.");
+      }
       this.log.debug("updating values.");
       await this.poll();
     } else {
@@ -78,10 +82,25 @@ class IcoCloud extends utils.Adapter {
   }
   async updateDevices() {
     const devices = await this.getDevicesAsync();
+    let poolArray;
+    let deleteAllowed = true;
     try {
-      const poolArray = await this.api.getPools();
-      for (const pool of poolArray) {
-        if (pool.id) {
+      poolArray = await this.api.getPools();
+    } catch (e) {
+      this.log.warn("Could not update pool list: " + e + ". Trying to update know pools instead. If this happens a lot, try to login again.");
+      poolArray = [];
+      for (const device of devices) {
+        if (device.native.id) {
+          poolArray.push({ id: device.native.id });
+        } else {
+          this.log.warn("Pool " + device.common.name + " is missing device id. Will not be able to update.");
+          deleteAllowed = false;
+        }
+      }
+    }
+    for (const pool of poolArray) {
+      if (pool.id) {
+        try {
           const icoDevice = await this.api.getDevice(pool.id);
           let found = false;
           for (const device of devices) {
@@ -133,15 +152,26 @@ class IcoCloud extends utils.Adapter {
             });
             await this.setObjectAsync(id, deviceObj);
           }
+        } catch (e) {
+          this.log.error(`Could not update pool ${pool.id}: ` + e + ". If network error, retry later. Otherwise, please try to login again.");
+          deleteAllowed = false;
         }
       }
+    }
+    if (deleteAllowed) {
       for (const device of devices) {
         this.log.debug("Deleting device " + device._id);
-        await this.deleteDeviceAsync(device._id.split(".").pop());
+        await this.delObjectAsync(device._id.split(".").pop(), { recursive: true });
       }
-    } catch (e) {
-      this.log.error("Could not update devices: " + e + ". If network error, retry later. Otherwise, please try to login again.");
-      this.terminate("Could not update devices.", utils.EXIT_CODES.ADAPTER_REQUESTED_TERMINATION);
+    } else {
+      for (const deviceObj of devices) {
+        this.devices.push({
+          poolId: deviceObj.native.poolId,
+          swVersion: deviceObj.native.swVersion,
+          hasObjects: {},
+          uuid: deviceObj._id.split(".").pop() || ""
+        });
+      }
     }
   }
   async createObjectForMeasurement(device, type) {
