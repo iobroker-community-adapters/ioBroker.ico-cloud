@@ -55,7 +55,7 @@
     "react": "^17.0.2",
     "react-simple-oauth2-login": "^0.5.4",
     "rimraf": "^5.0.5",
-    "sinon": "^15.1.2",
+    "sinon": "^19.0.2",
     "sinon-chai": "^3.7.0",
     "source-map-support": "^0.5.21",
     "ts-node": "^10.9.2",
