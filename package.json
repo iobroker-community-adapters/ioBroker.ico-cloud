@@ -23,7 +23,7 @@
     "node": ">=16"
   },
   "dependencies": {
-    "@iobroker/adapter-core": "^2.6.8",
+    "@iobroker/adapter-core": "^3.2.2",
     "axios": "^1.6.7"
   },
   "devDependencies": {
