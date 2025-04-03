@@ -18,6 +18,10 @@ var __copyProps = (to, from, except, desc) => {
   return to;
 };
 var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(
+  // If the importer is in node compatibility mode or this is not an ESM
+  // file that has been converted to a CommonJS file using a Babel-
+  // compatible transform (i.e. "__esModule" has not been set), then set
+  // "default" to the CommonJS "module.exports" for node compatibility.
   isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target,
   mod
 ));
@@ -72,16 +76,20 @@ class Api {
   }
   async requestInfo(urlPart, method = "get", triedRefresh = false) {
     try {
+      const headers = {
+        Authorization: "Bearer " + this.accessToken,
+        Accept: "application/json",
+        "Accept-Charset": "utf-8",
+        "Accept-Encoding": "gzip, deflate"
+      };
+      if (urlPart.includes("?")) {
+        headers["Content-type"] = "application/x-www-form-urlencoded";
+      }
       const response = await import_axios.default.request({
         url: apiPrefix + urlPart,
         method,
         responseType: method === "get" ? "json" : "text",
-        headers: {
-          Authorization: "Bearer " + this.accessToken,
-          Accept: "application/json",
-          "Accept-Charset": "utf-8",
-          "Accept-Encoding": "gzip, deflate"
-        }
+        headers
       });
       if (typeof response.data === "string") {
         return JSON.parse(response.data);
@@ -104,6 +112,9 @@ class Api {
       }
     }
   }
+  //===========================================================================================================
+  // ========== User stuff:
+  //===========================================================================================================
   async getUser() {
     const data = await this.requestInfo("user/info");
     if (typeof data === "string") {
@@ -111,36 +122,78 @@ class Api {
     }
     return data;
   }
+  // will return:
+  //     "conductivity": "MICRO_SIEMENS_PER_CENTI_METER",
+  //     "hardness": "FRENCH_DEGREE",
+  //     "orp": "MILLI_VOLT",
+  //     "pressure": "HECTO_PASCAL",
+  //     "salt": "GRAM_PER_LITER",
+  //     "speed": "METER_PER_SECOND",
+  //     "temperature": "CELSIUS",
+  //     "volume": "CUBIC_METER"
   async getUnits() {
     const data = await this.requestInfo("user/units");
     return data;
   }
+  // Result:
+  // [
+  //     {
+  //         "id": 234,
+  //         "name": "John's Pool",
+  //         "type": "outdoor_inground_pool",
+  //         "volume": 15,
+  //         "disinfection": {
+  //             "primary": "chlorine",
+  //             "secondary": {
+  //                 "uv_sanitizer": true,
+  //                 "ozonator": false
+  //             }
+  //         },
+  //         "address": {
+  //             "street": "162 Avenue Robert Schuman",
+  //             "zipcode": "13760",
+  //             "city": "Saint-Cannat",
+  //             "country": "France",
+  //             "latitude": 43.612282,
+  //             "longitude": 5.3179397
+  //         },
+  //         "updated_at": "2019-11-27T23:00:21+0000"
+  //     },
+  //     {
+  //         ...
+  //     }
+  // ]
   async getPools() {
     const data = await this.requestInfo("pools");
+    console.log(data);
     return data;
   }
   async getDevice(id) {
     const data = await this.requestInfo(`pools/${id}/device`);
+    console.log(data);
     return data;
   }
   async getConfiguration(id) {
     const data = await this.requestInfo(`pools/${id}/configuration`);
     return data;
   }
+  //getShares...?
+  //===========================================================================================================
+  // ========== Measurements:
+  //===========================================================================================================
   async getLastMeasures(id) {
-    const data = await this.requestInfo(`pools/${id}/lastmeasures?
-            types[]=temperature&
-            types[]=ph&
-            types[]=orp&
-            types[]=salt&
-            types[]=tds&
-            types[]=battery&
-            types[]=rssi`);
+    const data = await this.requestInfo(`pools/${id}/lastmeasures?types[]=temperature&types[]=ph&types[]=orp&types[]=salt&types[]=tds&types[]=battery&types[]=rssi`);
     for (const measure of data) {
       measure.value_time = new Date(measure.value_time);
     }
     return data;
   }
+  /**
+   * Get all measures of type for the last day / week / month
+   * @param id
+   * @param type
+   * @param period
+   */
   async getMeasures(id, type, period) {
     const data = await this.requestInfo(`pools/${id}/measure?
             type=${type}&
@@ -150,6 +203,9 @@ class Api {
     }
     return data;
   }
+  //===========================================================================================================
+  // ========== Recommendations:
+  //===========================================================================================================
   async getRecommendations(id) {
     const data = await this.requestInfo(`pools/${id}/recommendations`);
     for (const recommendation of data) {

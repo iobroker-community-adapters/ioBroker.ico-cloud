@@ -61,7 +61,7 @@ class IcoCloud extends utils.Adapter {
             }
             if (instanceObject.common.schedule === undefined || instanceObject.common.schedule === '59 * * * *') {
                 this.log.info('Default schedule found and adjusted to spread calls better over the full hour.');
-                instanceObject.common.schedule = Math.floor(Math.random() * 60) + ' * * * *';
+                instanceObject.common.schedule = `${Math.floor(Math.random() * 60)} ${Math.floor(Math.random() * 60)} * * * *`;
                 updateConfig = true;
             }
             if (updateConfig) {
@@ -72,7 +72,7 @@ class IcoCloud extends utils.Adapter {
 
         const delay = Math.floor(Math.random() * 30000);
         this.log.debug(`Delay execution by ${delay}ms to better spread API calls`);
-        await this.sleep(delay);
+        //await this.sleep(delay);
 
         if (this.config.refreshToken) {
             this.api = new Api({

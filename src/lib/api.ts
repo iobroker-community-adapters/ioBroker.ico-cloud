@@ -104,20 +104,23 @@ export class Api {
 
     private async requestInfo(urlPart: string, method: Method = 'get', triedRefresh = false) : Promise<Record<string, any> | null | string> {
         try {
+            const headers : Record<string, string> = {
+                Authorization: 'Bearer ' + this.accessToken,
+                Accept: 'application/json',
+                'Accept-Charset': 'utf-8',
+                'Accept-Encoding': 'gzip, deflate'
+            };
+            if (urlPart.includes('?')){
+                headers['Content-type'] = 'application/x-www-form-urlencoded';
+            }
+
             const response = await axios.request({
                 url: apiPrefix + urlPart,
                 method,
                 responseType: method === 'get' ? 'json' : 'text',
-                /*transitional: {
-                    silentJSONParsing: true
-                },*/
-                headers: {
-                    Authorization: 'Bearer ' + this.accessToken,
-                    Accept: 'application/json',
-                    'Accept-Charset': 'utf-8',
-                    'Accept-Encoding': 'gzip, deflate'
-                }
+                headers
             });
+
             if (typeof response.data === 'string') {
                 return JSON.parse(response.data);
             }
@@ -198,11 +201,13 @@ export class Api {
     // ]
     async getPools() : Promise<Array<any> > {
         const data = await this.requestInfo('pools');
+        console.log(data);
         return <Array<any> > data;
     }
 
     async getDevice(id : string) : Promise<{uuid: string, serial_number: string, sw_version: string}> {
         const data = await this.requestInfo(`pools/${id}/device`);
+        console.log(data);
         return <{uuid: string, serial_number: string, sw_version: string}> data;
     }
 
@@ -219,14 +224,14 @@ export class Api {
     //===========================================================================================================
 
     async getLastMeasures(id: number) : Promise<Array<Measure> > {
-        const data = (await this.requestInfo(`pools/${id}/lastmeasures?
-            types[]=temperature&
-            types[]=ph&
-            types[]=orp&
-            types[]=salt&
-            types[]=tds&
-            types[]=battery&
-            types[]=rssi`)) as Array<Measure>;
+        const data = (await this.requestInfo(`pools/${id}/lastmeasures?` +
+            'types[]=temperature&' +
+            'types[]=ph&' +
+            'types[]=orp&' +
+            'types[]=salt&' +
+            'types[]=tds&' +
+            'types[]=battery&' +
+            'types[]=rssi')) as Array<Measure>;
         for (const measure of data) {
             measure.value_time = new Date(measure.value_time);
         }
