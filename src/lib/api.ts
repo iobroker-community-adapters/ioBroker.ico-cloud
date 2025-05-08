@@ -1,5 +1,5 @@
 import axios, {AxiosError, Method} from 'axios';
-import url from 'url';
+import { URLSearchParams } from 'node:url';
 
 // Headers:
 // Accept: application/json
@@ -13,9 +13,10 @@ import url from 'url';
 //api says that measurements are taken every hour (?)
 
 const baseURL = 'https://interop.ondilo.com/';
-const refreshURL = baseURL + 'oauth2/token';
+const tokenURL = baseURL + 'oauth2/token';
 const client_id = 'customer_api';
 const apiPrefix = baseURL + 'api/customer/v1/';
+const authorizeBaseUrl = baseURL + 'oauth2/authorize';
 
 export interface Configuration {
     temperature_low: number,
@@ -71,7 +72,7 @@ export class Api {
 
     private async doRefreshToken() : Promise<boolean> {
         try {
-            const response = await axios.post(refreshURL, new url.URLSearchParams({
+            const response = await axios.post(tokenURL, new URLSearchParams({
                 refresh_token: this.refreshToken,
                 grant_type: 'refresh_token',
                 client_id
@@ -144,7 +145,43 @@ export class Api {
     }
 
 
+    static getLoginUrl(redirectUrl: string, state: string) : string {
+        //interop.ondilo.com/oauth2/authorize?client_id=customer_api&scope=api&redirect_uri=http://localhost:8081/oauth2_callbacks/ico-cloud.0/&response_type=code&state=ioBroker.ico-cloud1483502118005.6616
+        return `${authorizeBaseUrl}?client_id=${client_id}&scope=api&response_type=code&redirect_uri=${redirectUrl}&state=${state}`;
+    }
 
+    static async getToken(code: string, redirectUrl: string, log: any) : Promise<false | {accessToken?: string, refreshToken?: string}> {
+        log.debug('Sending post to get token');
+        const urlPart = tokenURL;
+        try {
+            const result = await axios.post(urlPart,
+                `code=${code}&grant_type=authorization_code&client_id=customer_api&redirect_uri=${redirectUrl}`,
+                {
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    responseType: 'json',
+                });
+            //log.debug(JSON.stringify(result.data));
+            if (result.status === 200) {
+                if (result.data && result.data.access_token) {
+                    return { accessToken: result.data.access_token, refreshToken: result.data.refresh_token };
+                } else {
+                    log.error('No token in response. ' + JSON.stringify(result.data));
+                }
+            } else {
+                log.error(result.status + ' - ' + JSON.stringify(result.data));
+            }
+        } catch (e: any | AxiosError) {
+            if (axios.isAxiosError(e)) {
+                const response = (e as AxiosError).response || {status: 0, data: 'Unknown failure', headers: ''};
+                log.error(`API Error ${response.status} while getting ${urlPart}: ${JSON.stringify(response.data)} - headers: ${JSON.stringify(response.headers)}`);
+            } else {
+                log.error('Unexpected error getting ' + urlPart + ': ' + e.stack);
+            }
+        }
+        return false;
+    }
 
     //===========================================================================================================
     // ========== User stuff:

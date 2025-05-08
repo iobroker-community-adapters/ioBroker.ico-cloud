@@ -2,21 +2,57 @@
     "i18n": true,
     "type": "panel",
     "items": {
+        "_loginRequiredMessage": {
+            "type": "staticText",
+            "text": "loginRequiredMessage",
+            "hidden": "data.refreshToken",
+            "newLine": true,
+            "xs": 12,
+            "sm": 12,
+            "md": 12,
+            "lg": 12
+        },
+        "_startAdapterMessage": {
+            "type": "staticText",
+            "text": "adapterStartRequired",
+            "hidden": "_alive || data.refreshToken",
+            "newLine": true,
+            "xs": 12,
+            "sm": 12,
+            "md": 12,
+            "lg": 12
+        },
         "_authenticate": {
             "newLine": true,
             "variant": "contained",
             "color": "primary",
-            "disabled": "false && !_alive",
+            "disabled": "!_alive",
             "type": "sendTo",
             "error": {
                 "connect timeout": "Connection timeout"
             },
             "icon": "auth",
             "command": "getOAuthStartLink",
-            "jsonData": "{\"redirectUriBase\": \"${data._origin}\", ...}",
-            "label": "Authenticate with Ondilo",
+            "jsonData": "{\"redirectUriBase\": \"${data._origin}\"}",
+            "label": "loginWithOndilo",
             "openUrl": true,
-            "window": "Login with Ondilo"
+            "window": "Login with Ondilo",
+            "useNative": true,
+            "hidden": "!_alive",
+            "xs": 12,
+            "sm": 8,
+            "md": 6,
+            "lg": 4
+        },
+        "_allOkMessage": {
+            "type": "staticText",
+            "text": "tokenPresent",
+            "hidden": "!data.refreshToken",
+            "newLine": true,
+            "xs": 12,
+            "sm": 12,
+            "md": 12,
+            "lg": 12
         }
     }
 }

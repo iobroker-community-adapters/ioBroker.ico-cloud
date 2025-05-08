@@ -32,12 +32,16 @@ __export(api_exports, {
 });
 module.exports = __toCommonJS(api_exports);
 var import_axios = __toESM(require("axios"));
-var import_url = __toESM(require("url"));
+var import_node_url = require("node:url");
 const baseURL = "https://interop.ondilo.com/";
-const refreshURL = baseURL + "oauth2/token";
+const tokenURL = baseURL + "oauth2/token";
 const client_id = "customer_api";
 const apiPrefix = baseURL + "api/customer/v1/";
+const authorizeBaseUrl = baseURL + "oauth2/authorize";
 class Api {
+  accessToken;
+  refreshToken;
+  log;
   constructor(options) {
     this.accessToken = options.accessToken;
     this.refreshToken = options.refreshToken;
@@ -45,7 +49,7 @@ class Api {
   }
   async doRefreshToken() {
     try {
-      const response = await import_axios.default.post(refreshURL, new import_url.default.URLSearchParams({
+      const response = await import_axios.default.post(tokenURL, new import_node_url.URLSearchParams({
         refresh_token: this.refreshToken,
         grant_type: "refresh_token",
         client_id
@@ -111,6 +115,42 @@ class Api {
         throw new Error("Unexpected error getting " + urlPart + ": " + e.stack);
       }
     }
+  }
+  static getLoginUrl(redirectUrl, state) {
+    return `${authorizeBaseUrl}?client_id=${client_id}&scope=api&response_type=code&redirect_uri=${redirectUrl}&state=${state}`;
+  }
+  static async getToken(code, redirectUrl, log) {
+    log.debug("Sending post to get token");
+    const urlPart = tokenURL;
+    try {
+      const result = await import_axios.default.post(
+        urlPart,
+        `code=${code}&grant_type=authorization_code&client_id=customer_api&redirect_uri=${redirectUrl}`,
+        {
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          responseType: "json"
+        }
+      );
+      if (result.status === 200) {
+        if (result.data && result.data.access_token) {
+          return { accessToken: result.data.access_token, refreshToken: result.data.refresh_token };
+        } else {
+          log.error("No token in response. " + JSON.stringify(result.data));
+        }
+      } else {
+        log.error(result.status + " - " + JSON.stringify(result.data));
+      }
+    } catch (e) {
+      if (import_axios.default.isAxiosError(e)) {
+        const response = e.response || { status: 0, data: "Unknown failure", headers: "" };
+        log.error(`API Error ${response.status} while getting ${urlPart}: ${JSON.stringify(response.data)} - headers: ${JSON.stringify(response.headers)}`);
+      } else {
+        log.error("Unexpected error getting " + urlPart + ": " + e.stack);
+      }
+    }
+    return false;
   }
   //===========================================================================================================
   // ========== User stuff:

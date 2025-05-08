@@ -26,7 +26,8 @@
         "it": "adattatore modificato per essere adattatore di pianificazione.",
         "es": "adaptador cambiado para ser adaptador de programación.",
         "pl": "zmieniono adapter do adaptowania harmonogramu.",
-        "zh-cn": "调整者改为时间表。."
+        "zh-cn": "调整者改为时间表。.",
+        "uk": "Змінено адаптер для розкладу адаптера."
       },
       "0.0.7": {
         "en": "more dependencies & administrative stuff.",
@@ -38,7 +39,8 @@
         "it": "più dipendenze e cose amministrative.",
         "es": "más dependencias y cosas administrativas.",
         "pl": "wymagania i administracyjne.",
-        "zh-cn": "更加依赖和管理障碍。."
+        "zh-cn": "更加依赖和管理障碍。.",
+        "uk": "Більше залежності та адміністративні речі."
       },
       "0.0.6": {
         "en": "dependencies & updates",
@@ -50,7 +52,8 @@
         "it": "dipendenze e aggiornamenti",
         "es": "actualizaciones de las dependencias",
         "pl": "zależności i aktualizacji",
-        "zh-cn": "依赖和更新"
+        "zh-cn": "依赖和更新",
+        "uk": "залежності та оновлення"
       },
       "0.0.5": {
         "en": "add necessary admin dependency.\nDo not use unknown roles.",
@@ -62,7 +65,8 @@
         "it": "aggiungere la dipendenza amministratore necessaria.\nNon utilizzare ruoli sconosciuti.",
         "es": "agregue la dependencia administrativa necesaria.\nNo utilice roles desconocidos.",
         "pl": "dodaj niezbędną zależność administratora.\nNie używaj nieznanych ról.",
-        "zh-cn": "添加必要的管理员依赖项。\n不要使用未知角色。"
+        "zh-cn": "添加必要的管理员依赖项。\n不要使用未知角色。",
+        "uk": "Додайте необхідну залежність адміністратора.\nНе використовуйте невідомі ролі."
       },
       "0.0.4": {
         "en": "change default poll interfal to one hour, because it seems no more measurements are done.\nfixed issue in polling",
@@ -74,7 +78,8 @@
         "it": "cambia l'intervallo di polling predefinito a un'ora, perché sembra che non vengano più eseguite misurazioni.\nproblema risolto nei sondaggi",
         "es": "cambie el intervalo de sondeo predeterminado a una hora, porque parece que no se realizan más mediciones.\nproblema solucionado en la votación",
         "pl": "zmień domyślny interfal sondy na jedną godzinę, ponieważ wydaje się, że nie są wykonywane żadne dalsze pomiary.\nnaprawiony problem w ankietach",
-        "zh-cn": "将默认轮询间隔更改为一小时，因为似乎不再进行测量。\n固定投票问题"
+        "zh-cn": "将默认轮询间隔更改为一小时，因为似乎不再进行测量。\n固定投票问题",
+        "uk": "Змініть опитування за замовчуванням міжфалій на одну годину, оскільки, здається, більше не проводиться вимірювань.\nВиправлена ​​проблема в опитуванні"
       },
       "0.0.3": {
         "en": "Rename to ico-cloud",
@@ -86,7 +91,8 @@
         "it": "Rinomina in ico-cloud",
         "es": "Cambiar el nombre a ico-cloud",
         "pl": "Zmień nazwę na ico-cloud",
-        "zh-cn": "重命名为 ico-cloud"
+        "zh-cn": "重命名为 ico-cloud",
+        "uk": "Перейменуйте на ICO-Cloud"
       }
     },
     "titleLang": {
@@ -99,7 +105,8 @@
       "it": "Sensore piscina ICO",
       "es": "Sensor de piscina ICO",
       "pl": "Czujnik basenu ICO",
-      "zh-cn": "ICO池传感器"
+      "zh-cn": "ICO池传感器",
+      "uk": "Датчик басейну ICO"
     },
     "desc": {
       "en": "ICO Pool sensor allow to monitor the state and temperature of the water in your pool and recommends actions to take.",
@@ -111,7 +118,8 @@
       "it": "Il sensore ICO Pool consente di monitorare lo stato e la temperatura dell'acqua nella piscina e consiglia le azioni da intraprendere.",
       "es": "El sensor ICO Pool permite controlar el estado y la temperatura del agua de su piscina y recomienda acciones a tomar.",
       "pl": "Czujnik ICO Pool pozwala monitorować stan i temperaturę wody w Twoim basenie oraz rekomendować działania.",
-      "zh-cn": "ICO 池传感器允许监控池中水的状态和温度，并建议采取的措施。"
+      "zh-cn": "ICO 池传感器允许监控池中水的状态和温度，并建议采取的措施。",
+      "uk": "Датчик басейну ICO дозволяє стежити за станом та температурою води у вашому басейні та рекомендує вжити заходів."
     },
     "authors": [
       "Garfonso <garfonso@mobo.info>"
@@ -144,6 +152,7 @@
     "adminUI": {
       "config": "json"
     },
+    "messagebox": true,
     "dependencies": [
       {
         "js-controller": ">=6.0.11"
@@ -151,7 +160,7 @@
     ],
     "globalDependencies": [
       {
-        "admin": "7.0.23"
+        "admin": ">=7.0.23"
       }
     ]
   },
