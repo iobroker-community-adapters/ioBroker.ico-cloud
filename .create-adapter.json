@@ -43,7 +43,7 @@
     "dependabot": "yes",
     "replay": "/home/achim/development/iobroker/ioBroker.ico-cloud/.create-adapter.json",
     "creatorVersion": "2.6.5",
-    "adminUi": "html",
+    "adminUi": "json",
     "nodeVersion": "20",
     "i18n": "JSON"
 }
