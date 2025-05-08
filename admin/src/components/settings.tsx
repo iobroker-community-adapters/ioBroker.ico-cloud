@@ -198,7 +198,7 @@ class Settings extends React.Component<SettingsProps, SettingsState> {
                     clientId="customer_api"
                     scope="api"
                     redirectUri={window.location.origin + '/'}
-                    isCrossOrigin={false}
+                    isCrossOrigin={true}
                     onSuccess={this.onOauthSuccess.bind(this)}
                     onFailure={this.onOauthFailure.bind(this)}
                     state={state}

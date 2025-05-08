@@ -56,7 +56,7 @@ class IcoCloud extends utils.Adapter {
       }
       if (instanceObject.common.schedule === void 0 || instanceObject.common.schedule === "59 * * * *") {
         this.log.info("Default schedule found and adjusted to spread calls better over the full hour.");
-        instanceObject.common.schedule = Math.floor(Math.random() * 60) + " * * * *";
+        instanceObject.common.schedule = `${Math.floor(Math.random() * 60)} ${Math.floor(Math.random() * 60)} * * * *`;
         updateConfig = true;
       }
       if (updateConfig) {
