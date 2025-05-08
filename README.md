@@ -31,6 +31,10 @@ Icon and name of ICO and Ondilo are property of Ondilo.
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+* (Garfonso) rewrote config UI
+* (Garfonso) login works again
+
 ### 1.1.0 (2023-06-20)
 * (Garfonso) changed adapter logic, so that known pools are updated even if the pool list update fails.
 
