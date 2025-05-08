@@ -1,5 +1,5 @@
 /*
- * Created with @iobroker/create-adapter v2.1.1
+ * Created with @iobroker/create-adapter v2.6.5
  */
 
 //Api Documentation: https://interop.ondilo.com/docs/api/customer/v1/
