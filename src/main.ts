@@ -62,7 +62,8 @@ class IcoCloud extends utils.Adapter {
 
     private async sleep(ms: number): Promise<void> {
         return new Promise(resolve => {
-            this.sleeps.push(setTimeout(() => {
+            this.sleeps.push(
+                setTimeout(() => {
                     !this.unloaded && resolve();
                 }, ms),
             );
