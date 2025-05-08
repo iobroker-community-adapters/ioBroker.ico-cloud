@@ -1,0 +1,12 @@
+{
+    "ico-cloud adapter settings": "ico-cloud的适配器设置",
+    "ico adapter settings": "ICO的适配器设置",
+    "loginSuccessMessage": "收到的代码。请关闭此窗口和设置。登录完成。",
+    "loginWrongStateMessage": "收到的代码，但不匹配会话状态。请重新启动适配器，并尝试在几分钟内再次登录。",
+    "loginErrorMessage": "无法登录，请参阅日志以获取错误消息。",
+    "loginWithOndilo": "使用Ondilo登录",
+    "loginRequiredMessage": "没有令牌。请登录。",
+    "tokenPresent": "令牌已经存储在config中。一切都完成了。",
+    "Reset tokens": "重置令牌",
+    "adapterStartRequired": "请启动适配器。需要处理登录过程。"
+}

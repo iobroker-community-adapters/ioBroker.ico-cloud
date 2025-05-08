@@ -1,6 +1,12 @@
 {
-    "cli": true,
-    "target": "directory",
+    "plugins": [
+        "iobroker",
+        "license",
+        "manual-review"
+    ],
+    "addPlaceholder": false,
+    "ioPackageNoPrerelease": false,
+    "replay": "/home/achim/development/iobroker/ioBroker.rpi2/.releaseconfig.json",
     "adapterName": "ico-cloud",
     "title": "ICO Poolsensor",
     "description": "ICO Poolsensor allow to monitor the state of the water in your pool and recommends actions to take.",
@@ -23,9 +29,11 @@
     "dataSource": "poll",
     "connectionIndicator": "no",
     "language": "TypeScript",
-    "adminReact": "yes",
+    "nodeVersion": "20",
+    "adminUi": "json",
     "tools": [
-        "ESLint"
+        "ESLint",
+        "type checking"
     ],
     "releaseScript": "yes",
     "devServer": "yes",
@@ -37,10 +45,8 @@
     "authorGithub": "iobroker-community-adapters",
     "authorEmail": "garfonso@mobo.info",
     "gitRemoteProtocol": "SSH",
-    "gitCommit": "yes",
     "defaultBranch": "main",
     "license": "MIT License",
     "dependabot": "yes",
-    "replay": "/home/achim/development/iobroker/ioBroker.ico-cloud/.create-adapter.json",
-    "creatorVersion": "2.1.1"
+    "creatorVersion": "2.6.5"
 }

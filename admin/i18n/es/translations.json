@@ -1,0 +1,12 @@
+{
+    "ico-cloud adapter settings": "Ajustes del adaptador para ico-cloud",
+    "ico adapter settings": "Configuración del adaptador para ICO",
+    "loginSuccessMessage": "Código recibido. Cierre esta ventana y configuración. El inicio de sesión está hecho.",
+    "loginWrongStateMessage": "Recibió código pero no coincidía con el estado de la sesión. Por favor, para reiniciar el adaptador e intente iniciar sesión nuevamente en unos minutos.",
+    "loginErrorMessage": "No pudo obtener iniciar sesión, vea el registro para el mensaje de error.",
+    "loginWithOndilo": "Iniciar sesión con Ondilo",
+    "loginRequiredMessage": "Sin fichas, todavía. Inicie sesión.",
+    "tokenPresent": "Un token ya está almacenado en la configuración. Todo está hecho.",
+    "Reset tokens": "Restablecer tokens",
+    "adapterStartRequired": "Comience el adaptador. Se requiere manejar el proceso de inicio de sesión."
+}

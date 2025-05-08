@@ -23,17 +23,31 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
 ));
 var utils = __toESM(require("@iobroker/adapter-core"));
 var import_api = require("./lib/api");
+function encryptDecrypt(key, value) {
+  if (!value || !key) {
+    return value;
+  }
+  let result = "";
+  for (let i = 0; i < value.length; ++i) {
+    result += String.fromCharCode(key[i % key.length].charCodeAt(0) ^ value.charCodeAt(i));
+  }
+  return result;
+}
 class IcoCloud extends utils.Adapter {
+  api;
+  pollInterval = 0;
+  devices = [];
+  pollTimeout = null;
+  unloaded = false;
+  redirectURI = "";
+  oauthStateCode = "";
   constructor(options = {}) {
     super({
       ...options,
       name: "ico-cloud"
     });
-    this.pollInterval = 0;
-    this.devices = [];
-    this.pollTimeout = null;
-    this.unloaded = false;
     this.on("ready", this.onReady.bind(this));
+    this.on("message", this.onMessage.bind(this));
     this.on("unload", this.onUnload.bind(this));
   }
   async sleep(ms) {
@@ -66,6 +80,7 @@ class IcoCloud extends utils.Adapter {
     }
     const delay = Math.floor(Math.random() * 3e4);
     this.log.debug(`Delay execution by ${delay}ms to better spread API calls`);
+    await this.sleep(delay);
     if (this.config.refreshToken) {
       this.api = new import_api.Api({
         accessToken: this.config.accessToken,
@@ -80,11 +95,11 @@ class IcoCloud extends utils.Adapter {
       }
       this.log.debug("updating values.");
       await this.poll();
+      this.log.debug("All done. Exit.");
+      this.terminate();
     } else {
-      this.log.info("Not authorized, yet. Please see configuration.");
+      this.log.info("Not authorized, yet. Please see configuration. Letting adapter run to process oauth2 callback.");
     }
-    this.log.debug("All done. Exit.");
-    this.terminate();
   }
   async updateDevices() {
     const devices = await this.getDevicesAsync();
@@ -349,20 +364,59 @@ class IcoCloud extends utils.Adapter {
   //     }
   // }
   // If you need to accept messages in your adapter, uncomment the following block and the corresponding line in the constructor.
-  // /**
-  //  * Some message was sent to this instance over message box. Used by email, pushover, text2speech, ...
-  //  * Using this method requires "common.messagebox" property to be set to true in io-package.json
-  //  */
-  // private onMessage(obj: ioBroker.Message): void {
-  //     if (typeof obj === 'object' && obj.message) {
-  //         if (obj.command === 'send') {
-  //             // e.g. send email or pushover or whatever
-  //             this.log.info('send command');
-  //             // Send response in callback if required
-  //             if (obj.callback) this.sendTo(obj.from, obj.command, 'Message received', obj.callback);
-  //         }
-  //     }
-  // }
+  /**
+   * Some message was sent to this instance over message box. Used by email, pushover, text2speech, ...
+   * Using this method requires "common.messagebox" property to be set to true in io-package.json
+   */
+  async onMessage(obj) {
+    var _a;
+    if (typeof obj === "object" && obj.message) {
+      this.log.debug(`Message: ${JSON.stringify(obj)}`);
+      if (obj.command === "getOAuthStartLink") {
+        const baseUrl = obj.message.redirectUriBase;
+        this.redirectURI = `${baseUrl}oauth2_callbacks/${this.namespace}/`;
+        this.oauthStateCode = `ico-cloud-${Math.floor(Math.random() * 1e5)}-${Date.now()}`;
+        this.log.debug(`Got redirect URI: ${this.redirectURI}. Storing state ${this.oauthStateCode}`);
+        const loginUrl = import_api.Api.getLoginUrl(this.redirectURI, this.oauthStateCode);
+        this.log.debug(`Got login URL: ${loginUrl}`);
+        if (obj.callback) {
+          this.sendTo(obj.from, obj.command, { openUrl: loginUrl }, obj.callback);
+        }
+      }
+      if (obj.command === "oauth2Callback") {
+        this.log.debug(`Got oauth2 callback, trying to get access token. Stored state: ${this.oauthStateCode}`);
+        if (this.oauthStateCode === obj.message.state) {
+          const result = await import_api.Api.getToken(obj.message.code, this.redirectURI, this.log);
+          if (obj.callback) {
+            if (result) {
+              const systemConfig = await this.getForeignObjectAsync("system.config");
+              const secrect = ((_a = systemConfig == null ? void 0 : systemConfig.native) == null ? void 0 : _a.secret) || "RJaeBLRPwvPfh5O";
+              const instance = await this.getForeignObjectAsync(`system.adapter.${this.namespace}`);
+              instance.native.accessToken = encryptDecrypt(secrect, result.accessToken);
+              instance.native.refreshToken = encryptDecrypt(secrect, result.refreshToken);
+              this.sendTo(obj.from, obj.command, { result: "loginSuccessMessage", native: result, saveConfig: true }, obj.callback);
+              await this.setForeignObject(`system.adapter.${this.namespace}`, instance);
+            } else {
+              this.sendTo(obj.from, obj.command, { error: "loginErrorMessage" }, obj.callback);
+            }
+          }
+        } else {
+          if (obj.callback) {
+            this.sendTo(obj.from, obj.command, { error: "loginWrongStateMessage" }, obj.callback);
+          }
+        }
+      }
+      if (obj.command === "resetTokens") {
+        this.log.debug(`Got reset tokens command.`);
+        if (obj.callback) {
+          this.sendTo(obj.from, obj.command, {
+            native: { accessToken: "", refreshToken: "" },
+            saveConfig: false
+          }, obj.callback);
+        }
+      }
+    }
+  }
 }
 if (require.main !== module) {
   module.exports = (options) => new IcoCloud(options);

@@ -31,6 +31,10 @@ Icon and name of ICO and Ondilo are property of Ondilo.
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+* (Garfonso) rewrote config UI
+* (Garfonso) login works again
+
 ### 1.1.0 (2023-06-20)
 * (Garfonso) changed adapter logic, so that known pools are updated even if the pool list update fails.
 
@@ -60,7 +64,7 @@ Icon and name of ICO and Ondilo are property of Ondilo.
 ## License
 MIT License
 
-Copyright (c) 2023 Garfonso <garfonso@mobo.info>
+Copyright (c) 2025 Garfonso <garfonso@mobo.info>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

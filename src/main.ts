@@ -1,5 +1,5 @@
 /*
- * Created with @iobroker/create-adapter v2.1.1
+ * Created with @iobroker/create-adapter v2.6.5
  */
 
 //Api Documentation: https://interop.ondilo.com/docs/api/customer/v1/
@@ -20,12 +20,31 @@ interface myDevice {
     uuid: string
 }
 
+/**
+ * Used to encrypt & decrypt pin. Necessary as long as js-controller can't decrypt for us in array structure.
+ * @param key
+ * @param value
+ * @returns string
+ */
+function encryptDecrypt(key : string, value : string) : string {
+    if (!value || !key) {
+        return value;
+    }
+    let result = '';
+    for (let i = 0; i < value.length; ++i) {
+        result += String.fromCharCode(key[i % key.length].charCodeAt(0) ^ value.charCodeAt(i));
+    }
+    return result;
+}
+
 class IcoCloud extends utils.Adapter {
     private api?: Api;
     private pollInterval = 0;
     private devices: Array<myDevice> = [];
     private pollTimeout : NodeJS.Timeout | null = null;
     private unloaded = false;
+    private redirectURI = '';
+    private oauthStateCode = '';
 
     public constructor(options: Partial<utils.AdapterOptions> = {}) {
         super({
@@ -35,7 +54,7 @@ class IcoCloud extends utils.Adapter {
         this.on('ready', this.onReady.bind(this));
         // this.on('stateChange', this.onStateChange.bind(this));
         // this.on('objectChange', this.onObjectChange.bind(this));
-        // this.on('message', this.onMessage.bind(this));
+        this.on('message', this.onMessage.bind(this));
         this.on('unload', this.onUnload.bind(this));
     }
 
@@ -72,7 +91,7 @@ class IcoCloud extends utils.Adapter {
 
         const delay = Math.floor(Math.random() * 30000);
         this.log.debug(`Delay execution by ${delay}ms to better spread API calls`);
-        //await this.sleep(delay);
+        await this.sleep(delay);
 
         if (this.config.refreshToken) {
             this.api = new Api({
@@ -89,12 +108,11 @@ class IcoCloud extends utils.Adapter {
             }
             this.log.debug('updating values.');
             await this.poll();
+            this.log.debug('All done. Exit.');
+            this.terminate();
         } else {
-            this.log.info('Not authorized, yet. Please see configuration.');
+            this.log.info('Not authorized, yet. Please see configuration. Letting adapter run to process oauth2 callback.');
         }
-
-        this.log.debug('All done. Exit.');
-        this.terminate();
     }
 
     private async updateDevices() : Promise<void> {
@@ -377,23 +395,64 @@ class IcoCloud extends utils.Adapter {
     // }
 
     // If you need to accept messages in your adapter, uncomment the following block and the corresponding line in the constructor.
-    // /**
-    //  * Some message was sent to this instance over message box. Used by email, pushover, text2speech, ...
-    //  * Using this method requires "common.messagebox" property to be set to true in io-package.json
-    //  */
-    // private onMessage(obj: ioBroker.Message): void {
-    //     if (typeof obj === 'object' && obj.message) {
-    //         if (obj.command === 'send') {
-    //             // e.g. send email or pushover or whatever
-    //             this.log.info('send command');
+    /**
+     * Some message was sent to this instance over message box. Used by email, pushover, text2speech, ...
+     * Using this method requires "common.messagebox" property to be set to true in io-package.json
+     */
+    private async onMessage(obj: ioBroker.Message): Promise<void> {
+        if (typeof obj === 'object' && obj.message) {
+            this.log.debug(`Message: ${JSON.stringify(obj)}`);
+            if (obj.command === 'getOAuthStartLink') {
+                const baseUrl = obj.message.redirectUriBase;
+                this.redirectURI = `${baseUrl}oauth2_callbacks/${this.namespace}/`; // redirect URI that ondilo should call
+                this.oauthStateCode = `ico-cloud-${Math.floor(Math.random() * 100000)}-${Date.now()}`; // random state code
+                this.log.debug(`Got redirect URI: ${this.redirectURI}. Storing state ${this.oauthStateCode}`);
+                const loginUrl = Api.getLoginUrl(this.redirectURI, this.oauthStateCode);
+                this.log.debug(`Got login URL: ${loginUrl}`);
+                if (obj.callback) {
+                    this.sendTo(obj.from, obj.command, { openUrl: loginUrl }, obj.callback);
+                }
+            }
 
-    //             // Send response in callback if required
-    //             if (obj.callback) this.sendTo(obj.from, obj.command, 'Message received', obj.callback);
-    //         }
-    //     }
-    // }
+            if (obj.command === 'oauth2Callback') {
+                this.log.debug(`Got oauth2 callback, trying to get access token. Stored state: ${this.oauthStateCode}`);
+                if (this.oauthStateCode === obj.message.state) {
+                    const result = await Api.getToken(obj.message.code, this.redirectURI, this.log);
+                    if (obj.callback) {
+                        if (result) {
+                            //get secret for decryption:
+                            const systemConfig = await this.getForeignObjectAsync('system.config');
+                            const secrect = systemConfig?.native?.secret || 'RJaeBLRPwvPfh5O';
+                            const instance = await this.getForeignObjectAsync(`system.adapter.${this.namespace}`);
+                            //encrypt tokens:
+                            instance!.native.accessToken = encryptDecrypt(secrect, result.accessToken!);
+                            instance!.native.refreshToken = encryptDecrypt(secrect, result.refreshToken!);
+                            //this.log.debug( `sending to admin: ${JSON.stringify(result)}`);
+                            //sadly this does not (yet) store the tokens in the configuration...
+                            this.sendTo(obj.from, obj.command, {result: 'loginSuccessMessage', native: result, saveConfig: true}, obj.callback);
+                            await this.setForeignObject(`system.adapter.${this.namespace}`, instance!);
+                        } else {
+                            this.sendTo(obj.from, obj.command, {error: 'loginErrorMessage'}, obj.callback);
+                        }
+                    }
+                } else {
+                    if (obj.callback) {
+                        this.sendTo(obj.from, obj.command, {error: 'loginWrongStateMessage'}, obj.callback);
+                    }
+                }
+            }
 
-
+            if (obj.command === 'resetTokens') {
+                this.log.debug(`Got reset tokens command.`);
+                if (obj.callback) {
+                    this.sendTo(obj.from, obj.command, {
+                        native: { accessToken: '', refreshToken: '' },
+                        saveConfig: false
+                    }, obj.callback);
+                }
+            }
+        }
+    }
 }
 
 if (require.main !== module) {

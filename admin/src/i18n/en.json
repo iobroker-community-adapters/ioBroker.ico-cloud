@@ -1,9 +1,0 @@
-{
-    "ico adapter settings": "Adapter settings for ico",
-    "labelPollinterval": "Pollinterval (in minutes)",
-    "loginSuccessMessage": "Received code. Please press Save button. Login is done now.",
-    "loginWrongStateMessage": "Received code but was not matching session state. Please try to login again in a few minutes.",
-    "loginErrorMessage": "Could not get log in: ",
-    "login": "Login with Ondilo",
-    "loginPleaseMessage": "No tokens, yet. Please login."
-}
