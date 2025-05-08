@@ -1,5 +1,12 @@
 {
     "ico-cloud adapter settings": "Paramètres d'adaptateur pour ico-cloud",
-    "option1": "option1",
-    "option2": "Option2"
+    "ico adapter settings": "Paramètres de l'adaptateur pour ICO",
+    "loginSuccessMessage": "Code reçu. Veuillez fermer cette fenêtre et paramètres. La connexion est effectuée.",
+    "loginWrongStateMessage": "Code reçu mais ne correspondait pas à l'état de session. Veuillez redémarrer l'adaptateur et essayer de vous connecter à nouveau dans quelques minutes.",
+    "loginErrorMessage": "Impossible d'obtenir le connexion, voir le journal du message d'erreur.",
+    "loginWithOndilo": "Connectez-vous avec Ondilo",
+    "loginRequiredMessage": "Pas de jetons, pourtant. Veuillez vous connecter.",
+    "tokenPresent": "Un jeton est déjà stocké dans la configuration. Tout est fait.",
+    "Reset tokens": "Réinitialiser les jetons",
+    "adapterStartRequired": "Veuillez démarrer l'adaptateur. Il est nécessaire de gérer le processus de connexion."
 }

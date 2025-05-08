@@ -1,5 +1,12 @@
 {
-    "ico-cloud adapter settings": "Adaptereinstellungen für ico-cloud",
-    "option1": "Option1",
-    "option2": "Option2"
+    "ico adapter settings": "Adaptereinstellungen für ico",
+    "loginSuccessMessage": "Token erhalten. Bitte diese Seite schließen und die Einstellungen ebenfalls. Login ist damit erfolgreich.",
+    "loginWrongStateMessage": "Code erhalten, aber er passt nicht zur Session. Bitte in ein paar Minuten noch einmal versuchen.",
+    "loginErrorMessage": "Konnte nicht einloggen: ",
+    "login": "Bei Ondilo Einloggen",
+    "loginRequiredMessage": "Nock kein Zugangstoken, bitte einloggen.",
+    "loginWithOndilo": "Melden Sie sich mit Ondilo an",
+    "tokenPresent": "Ein Token ist bereits in der Konfiguration gespeichert. Alles ist fertig.",
+    "Reset tokens": "Token zurücksetzen",
+    "adapterStartRequired": "Bitte starten Sie den Adapter. Es ist erforderlich, den Anmeldungsprozess zu verarbeiten."
 }

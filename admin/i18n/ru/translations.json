@@ -1,5 +1,12 @@
 {
     "ico-cloud adapter settings": "Настройки адаптера для ico-cloud",
-    "option1": "вариант1",
-    "option2": "вариант2"
+    "ico adapter settings": "Adapter settings for ico",
+    "loginSuccessMessage": "Received code. Please close this window and settings. Login is done.",
+    "loginWrongStateMessage": "Received code but was not matching session state. Please to restart adapter and try to login again in a few minutes.",
+    "loginErrorMessage": "Could not get log in, see log for error message.",
+    "loginWithOndilo": "Login with Ondilo",
+    "loginRequiredMessage": "No tokens, yet. Please login.",
+    "tokenPresent": "A token is already stored in config. All is done.",
+    "Reset tokens": "Reset tokens",
+    "adapterStartRequired": "Please start adapter. It is required to handle the login process."
 }
