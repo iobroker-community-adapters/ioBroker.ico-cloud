@@ -1,0 +1,22 @@
+{
+    "i18n": true,
+    "type": "panel",
+    "items": {
+        "_authenticate": {
+            "newLine": true,
+            "variant": "contained",
+            "color": "primary",
+            "disabled": "false && !_alive",
+            "type": "sendTo",
+            "error": {
+                "connect timeout": "Connection timeout"
+            },
+            "icon": "auth",
+            "command": "getOAuthStartLink",
+            "jsonData": "{\"redirect_uri_base\": \"${data._origin}\", ...}",
+            "label": "Authenticate with XXX",
+            "openUrl": true,
+            "window": "Login with XXX"
+        }
+    }
+}
