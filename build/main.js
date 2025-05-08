@@ -41,6 +41,7 @@ class IcoCloud extends utils.Adapter {
   unloaded = false;
   redirectURI = "";
   oauthStateCode = "";
+  sleeps = [];
   constructor(options = {}) {
     super({
       ...options,
@@ -52,16 +53,18 @@ class IcoCloud extends utils.Adapter {
   }
   async sleep(ms) {
     return new Promise((resolve) => {
-      setTimeout(() => {
-        !this.unloaded && resolve();
-      }, ms);
+      this.sleeps.push(
+        setTimeout(() => {
+          !this.unloaded && resolve();
+        }, ms)
+      );
     });
   }
   /**
    * Is called when databases are connected and adapter received configuration.
    */
   async onReady() {
-    const instanceObject = await this.getForeignObjectAsync("system.adapter." + this.namespace);
+    const instanceObject = await this.getForeignObjectAsync(`system.adapter.${this.namespace}`);
     if (instanceObject) {
       let updateConfig = false;
       if (instanceObject.common.mode !== "schedule") {
@@ -74,7 +77,7 @@ class IcoCloud extends utils.Adapter {
         updateConfig = true;
       }
       if (updateConfig) {
-        this.log.debug("Updating configuration, new schedule: " + instanceObject.common.schedule);
+        this.log.debug(`Updating configuration, new schedule: ${instanceObject.common.schedule}`);
         await this.setForeignObjectAsync(instanceObject._id, instanceObject);
       }
     }
@@ -92,29 +95,37 @@ class IcoCloud extends utils.Adapter {
         await this.updateDevices();
       } catch (e) {
         this.log.info("Could not update devices -> will try to update measurements with known devices anyway.");
+        this.log.debug(`Error: ${e}`);
       }
       this.log.debug("updating values.");
       await this.poll();
       this.log.debug("All done. Exit.");
       this.terminate();
     } else {
-      this.log.info("Not authorized, yet. Please see configuration. Letting adapter run to process oauth2 callback.");
+      this.log.info(
+        "Not authorized, yet. Please see configuration. Letting adapter run to process oauth2 callback."
+      );
     }
   }
   async updateDevices() {
+    var _a;
     const devices = await this.getDevicesAsync();
     let poolArray;
     let deleteAllowed = true;
     try {
       poolArray = await this.api.getPools();
     } catch (e) {
-      this.log.warn("Could not update pool list: " + e + ". Trying to update know pools instead. If this happens a lot, try to login again.");
+      this.log.warn(
+        `Could not update pool list: ${e}. Trying to update know pools instead. If this happens a lot, try to login again.`
+      );
       poolArray = [];
       for (const device of devices) {
         if (device.native.id) {
           poolArray.push({ id: device.native.id });
         } else {
-          this.log.warn("Pool " + device.common.name + " is missing device id. Will not be able to update.");
+          this.log.warn(
+            `Pool ${(_a = device == null ? void 0 : device.common) == null ? void 0 : _a.name} is missing device id. Will not be able to update.`
+          );
           deleteAllowed = false;
         }
       }
@@ -154,7 +165,7 @@ class IcoCloud extends utils.Adapter {
             }
           }
           if (!found) {
-            const id = this.namespace + "." + icoDevice.uuid;
+            const id = `${this.namespace}.${icoDevice.uuid}`;
             const deviceObj = {
               type: "device",
               common: {
@@ -174,14 +185,16 @@ class IcoCloud extends utils.Adapter {
             await this.setObjectAsync(id, deviceObj);
           }
         } catch (e) {
-          this.log.error(`Could not update pool ${pool.id}: ` + e + ". If network error, retry later. Otherwise, please try to login again.");
+          this.log.error(
+            `Could not update pool ${pool.id}: ${e}. If network error, retry later. Otherwise, please try to login again.`
+          );
           deleteAllowed = false;
         }
       }
     }
     if (deleteAllowed) {
       for (const device of devices) {
-        this.log.debug("Deleting device " + device._id);
+        this.log.debug(`Deleting device ${device._id}`);
         await this.delObjectAsync(device._id.split(".").pop(), { recursive: true });
       }
     } else {
@@ -226,7 +239,7 @@ class IcoCloud extends utils.Adapter {
       case "battery": {
         role = "value.battery";
         unit = "%";
-        await this.setObjectNotExistsAsync(device.uuid + ".lowBat", {
+        await this.setObjectNotExistsAsync(`${device.uuid}.lowBat`, {
           type: "state",
           common: {
             name: "Low battery warning",
@@ -242,7 +255,7 @@ class IcoCloud extends utils.Adapter {
       case "rssi": {
         role = "value.rssi";
         unit = "%";
-        await this.setObjectNotExistsAsync(device.uuid + ".offline", {
+        await this.setObjectNotExistsAsync(`${device.uuid}.offline`, {
           type: "state",
           common: {
             name: "Low wifi signal",
@@ -256,7 +269,7 @@ class IcoCloud extends utils.Adapter {
         break;
       }
     }
-    const id = device.uuid + "." + type;
+    const id = `${device.uuid}.${type}`;
     const stateObj = {
       type: "state",
       common: {
@@ -281,16 +294,16 @@ class IcoCloud extends utils.Adapter {
           if (!device.hasObjects[measure.data_type]) {
             await this.createObjectForMeasurement(device, measure.data_type);
           }
-          const currState = await this.getStateAsync(device.uuid + "." + measure.data_type);
+          const currState = await this.getStateAsync(`${device.uuid}.${measure.data_type}`);
           if (!currState || currState.ts < measure.value_time.getTime()) {
             this.log.debug(`Got new Measurement for ${measure.data_type}: ${measure.value}`);
-            await this.setStateAsync(device.uuid + "." + measure.data_type, {
+            await this.setStateAsync(`${device.uuid}.${measure.data_type}`, {
               val: measure.value,
               ack: true,
               ts: measure.value_time.getTime()
             });
             if (measure.data_type === "battery") {
-              await this.setStateChangedAsync(device.uuid + ".lowBat", {
+              await this.setStateChangedAsync(`${device.uuid}.lowBat`, {
                 val: measure.value < 20,
                 //TODO: evaluate or make configurable...
                 ack: true,
@@ -298,7 +311,7 @@ class IcoCloud extends utils.Adapter {
               });
             }
             if (measure.data_type === "rssi") {
-              await this.setStateChangedAsync(device.uuid + ".offline", {
+              await this.setStateChangedAsync(`${device.uuid}.offline`, {
                 val: measure.value < 5,
                 //TODO: evaluate or make configurable...
                 ack: true,
@@ -309,12 +322,14 @@ class IcoCloud extends utils.Adapter {
             this.log.debug(`Measurement for ${measure.data_type} was already recorded in state db.`);
           }
         } else {
-          this.log.debug(`Did not read ${measure.data_type} for ${device.poolId} because ${JSON.stringify(measure.exclusion_reason)}`);
+          this.log.debug(
+            `Did not read ${measure.data_type} for ${device.poolId} because ${JSON.stringify(measure.exclusion_reason)}`
+          );
         }
       }
       await Promise.all(promises);
     } catch (e) {
-      this.log.warn("Could not get measurements: " + e);
+      this.log.warn(`Could not get measurements: ${e}`);
     }
   }
   async poll() {
@@ -328,12 +343,18 @@ class IcoCloud extends utils.Adapter {
   }
   /**
    * Is called when adapter shuts down - callback has to be called under any circumstances!
+   *
+   * @param callback - callback function
    */
   onUnload(callback) {
     try {
       this.unloaded = true;
+      for (const sleep of this.sleeps) {
+        clearTimeout(sleep);
+      }
       callback();
     } catch (e) {
+      console.error("Error during unloading:", e);
       callback();
     }
   }
@@ -367,6 +388,8 @@ class IcoCloud extends utils.Adapter {
   /**
    * Some message was sent to this instance over message box. Used by email, pushover, text2speech, ...
    * Using this method requires "common.messagebox" property to be set to true in io-package.json
+   *
+   * @param obj - message object
    */
   async onMessage(obj) {
     var _a;
@@ -394,7 +417,12 @@ class IcoCloud extends utils.Adapter {
               const instance = await this.getForeignObjectAsync(`system.adapter.${this.namespace}`);
               instance.native.accessToken = encryptDecrypt(secrect, result.accessToken);
               instance.native.refreshToken = encryptDecrypt(secrect, result.refreshToken);
-              this.sendTo(obj.from, obj.command, { result: "loginSuccessMessage", native: result, saveConfig: true }, obj.callback);
+              this.sendTo(
+                obj.from,
+                obj.command,
+                { result: "loginSuccessMessage", native: result, saveConfig: true },
+                obj.callback
+              );
               await this.setForeignObject(`system.adapter.${this.namespace}`, instance);
             } else {
               this.sendTo(obj.from, obj.command, { error: "loginErrorMessage" }, obj.callback);
@@ -409,10 +437,15 @@ class IcoCloud extends utils.Adapter {
       if (obj.command === "resetTokens") {
         this.log.debug(`Got reset tokens command.`);
         if (obj.callback) {
-          this.sendTo(obj.from, obj.command, {
-            native: { accessToken: "", refreshToken: "" },
-            saveConfig: false
-          }, obj.callback);
+          this.sendTo(
+            obj.from,
+            obj.command,
+            {
+              native: { accessToken: "", refreshToken: "" },
+              saveConfig: false
+            },
+            obj.callback
+          );
         }
       }
     }

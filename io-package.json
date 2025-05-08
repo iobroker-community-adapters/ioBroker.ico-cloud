@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "ico-cloud",
-    "version": "1.1.0",
+    "version": "2.0.0",
     "news": {
+      "2.0.0": {
+        "en": "rewrote config UI\nlogin works again\nbreaking: requires node 20 or higher",
+        "de": "rewroting config UI\nanmeldung funktioniert wieder\nbreaking: braucht jetzt node 20 oder höher",
+        "ru": "переписал Config UI\nлогин снова работает\nbreaking: requires node 20 or higher",
+        "pt": "reescrever a interface de usuário\nlogin funciona novamente\nbreaking: requires node 20 or higher",
+        "nl": "herschreven configuratie-UI\nlogin werkt opnieuw\nbreaking: requires node 20 or higher",
+        "fr": "réécrit config UI\nse connecter fonctionne à nouveau\nbreaking: requires node 20 or higher",
+        "it": "rewrote config UI\nfunziona di nuovo\nbreaking: requires node 20 or higher",
+        "es": "rewrote config UI\nlogin trabaja de nuevo\nbreaking: requires node 20 or higher",
+        "pl": "przepisywany interfejs konfiguracyjny\nlogowanie działa ponownie\nbreaking: requires node 20 or higher",
+        "uk": "javaScript licenses API Веб-сайт\nлогін працює знову\nbreaking: requires node 20 or higher",
+        "zh-cn": "重写配置 UI\n再次登录工作\nbreaking: requires node 20 or higher"
+      },
       "1.1.0": {
         "en": "changed adapter logic, so that known pools are updated even if the pool list update fails.",
         "de": "geänderte adapterlogik, so dass bekannte pools aktualisiert werden, auch wenn das pool-listen-update ausfällt.",
@@ -80,19 +93,6 @@
         "pl": "zmień domyślny interfal sondy na jedną godzinę, ponieważ wydaje się, że nie są wykonywane żadne dalsze pomiary.\nnaprawiony problem w ankietach",
         "zh-cn": "将默认轮询间隔更改为一小时，因为似乎不再进行测量。\n固定投票问题",
         "uk": "Змініть опитування за замовчуванням міжфалій на одну годину, оскільки, здається, більше не проводиться вимірювань.\nВиправлена ​​проблема в опитуванні"
-      },
-      "0.0.3": {
-        "en": "Rename to ico-cloud",
-        "de": "Umbenennen in ico-cloud",
-        "ru": "Переименовать в ico-cloud",
-        "pt": "Renomear para ico-cloud",
-        "nl": "Hernoemen naar ico-cloud",
-        "fr": "Renommer en ico-cloud",
-        "it": "Rinomina in ico-cloud",
-        "es": "Cambiar el nombre a ico-cloud",
-        "pl": "Zmień nazwę na ico-cloud",
-        "zh-cn": "重命名为 ico-cloud",
-        "uk": "Перейменуйте на ICO-Cloud"
       }
     },
     "titleLang": {

@@ -34,14 +34,22 @@ module.exports = __toCommonJS(api_exports);
 var import_axios = __toESM(require("axios"));
 var import_node_url = require("node:url");
 const baseURL = "https://interop.ondilo.com/";
-const tokenURL = baseURL + "oauth2/token";
+const tokenURL = `${baseURL}oauth2/token`;
 const client_id = "customer_api";
-const apiPrefix = baseURL + "api/customer/v1/";
-const authorizeBaseUrl = baseURL + "oauth2/authorize";
+const apiPrefix = `${baseURL}api/customer/v1/`;
+const authorizeBaseUrl = `${baseURL}oauth2/authorize`;
 class Api {
   accessToken;
   refreshToken;
   log;
+  /**
+   * Constructor
+   *
+   * @param options - options for the API
+   * @param options.refreshToken - refresh token
+   * @param options.accessToken - access token
+   * @param options.log - logger
+   */
   constructor(options) {
     this.accessToken = options.accessToken;
     this.refreshToken = options.refreshToken;
@@ -49,39 +57,42 @@ class Api {
   }
   async doRefreshToken() {
     try {
-      const response = await import_axios.default.post(tokenURL, new import_node_url.URLSearchParams({
-        refresh_token: this.refreshToken,
-        grant_type: "refresh_token",
-        client_id
-      }).toString(), {
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded"
+      const response = await import_axios.default.post(
+        tokenURL,
+        new import_node_url.URLSearchParams({
+          refresh_token: this.refreshToken,
+          grant_type: "refresh_token",
+          client_id
+        }).toString(),
+        {
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+          }
         }
-      });
+      );
       if (response.status === 200) {
         if (response.data && response.data.access_token) {
           this.accessToken = response.data.access_token;
           return true;
-        } else {
-          throw new Error("No toke in response. " + JSON.stringify(response.data));
         }
+        throw new Error(`No toke in response. ${JSON.stringify(response.data)}`);
       } else {
-        throw new Error(response.status + " - " + JSON.stringify(response.data));
+        throw new Error(`${response.status} - ${JSON.stringify(response.data)}`);
       }
     } catch (e) {
       if (import_axios.default.isAxiosError(e)) {
         const response = e.response || { status: 0, data: "Unknown failure", headers: "" };
-        throw new Error("Could not update token: " + response.status + " - " + JSON.stringify(response.data));
+        throw new Error(`Could not update token: ${response.status} - ${JSON.stringify(response.data)}`);
       } else {
-        this.log.error("Unexpected error during refresh: " + e);
-        throw new Error("Could not update token: " + e);
+        this.log.error(`Unexpected error during refresh: ${e}`);
+        throw new Error(`Could not update token: ${e}`);
       }
     }
   }
   async requestInfo(urlPart, method = "get", triedRefresh = false) {
     try {
       const headers = {
-        Authorization: "Bearer " + this.accessToken,
+        Authorization: `Bearer ${this.accessToken}`,
         Accept: "application/json",
         "Accept-Charset": "utf-8",
         "Accept-Encoding": "gzip, deflate"
@@ -107,18 +118,34 @@ class Api {
           if (refreshWorked) {
             return this.requestInfo(urlPart, method, true);
           }
-          throw new Error("Could not update token: " + response.status + " - " + JSON.stringify(response.data));
+          throw new Error(`Could not update token: ${response.status} - ${JSON.stringify(response.data)}`);
         } else {
-          throw new Error(`API Error ${response.status} while getting ${urlPart}: ${JSON.stringify(response.data)} - headers: ${JSON.stringify(response.headers)}`);
+          throw new Error(
+            `API Error ${response.status} while getting ${urlPart}: ${JSON.stringify(response.data)} - headers: ${JSON.stringify(response.headers)}`
+          );
         }
       } else {
-        throw new Error("Unexpected error getting " + urlPart + ": " + e.stack);
+        throw new Error(`Unexpected error getting ${urlPart}: ${e.stack}`);
       }
     }
   }
+  /**
+   * Create login url from redirect url and state variable. Used for oauth.
+   *
+   * @param redirectUrl - redirect url
+   * @param state - state variable
+   * @returns login url
+   */
   static getLoginUrl(redirectUrl, state) {
     return `${authorizeBaseUrl}?client_id=${client_id}&scope=api&response_type=code&redirect_uri=${redirectUrl}&state=${state}`;
   }
+  /**
+   * Get token using code from login.
+   *
+   * @param code - code from login
+   * @param redirectUrl - redirect url used during login
+   * @param log - logger
+   */
   static async getToken(code, redirectUrl, log) {
     log.debug("Sending post to get token");
     const urlPart = tokenURL;
@@ -136,18 +163,19 @@ class Api {
       if (result.status === 200) {
         if (result.data && result.data.access_token) {
           return { accessToken: result.data.access_token, refreshToken: result.data.refresh_token };
-        } else {
-          log.error("No token in response. " + JSON.stringify(result.data));
         }
+        log.error(`No token in response. ${JSON.stringify(result.data)}`);
       } else {
-        log.error(result.status + " - " + JSON.stringify(result.data));
+        log.error(`${result.status} - ${JSON.stringify(result.data)}`);
       }
     } catch (e) {
       if (import_axios.default.isAxiosError(e)) {
         const response = e.response || { status: 0, data: "Unknown failure", headers: "" };
-        log.error(`API Error ${response.status} while getting ${urlPart}: ${JSON.stringify(response.data)} - headers: ${JSON.stringify(response.headers)}`);
+        log.error(
+          `API Error ${response.status} while getting ${urlPart}: ${JSON.stringify(response.data)} - headers: ${JSON.stringify(response.headers)}`
+        );
       } else {
-        log.error("Unexpected error getting " + urlPart + ": " + e.stack);
+        log.error(`Unexpected error getting ${urlPart}: ${e.stack}`);
       }
     }
     return false;
@@ -155,6 +183,9 @@ class Api {
   //===========================================================================================================
   // ========== User stuff:
   //===========================================================================================================
+  /**
+   * Get user info
+   */
   async getUser() {
     const data = await this.requestInfo("user/info");
     if (typeof data === "string") {
@@ -171,6 +202,9 @@ class Api {
   //     "speed": "METER_PER_SECOND",
   //     "temperature": "CELSIUS",
   //     "volume": "CUBIC_METER"
+  /**
+   * Get units
+   */
   async getUnits() {
     const data = await this.requestInfo("user/units");
     return data;
@@ -203,16 +237,29 @@ class Api {
   //         ...
   //     }
   // ]
+  /**
+   * Get all pools
+   */
   async getPools() {
     const data = await this.requestInfo("pools");
     console.log(data);
     return data;
   }
+  /**
+   * Get pool by id
+   *
+   * @param id of the pool
+   */
   async getDevice(id) {
     const data = await this.requestInfo(`pools/${id}/device`);
     console.log(data);
     return data;
   }
+  /**
+   * Get pool configuration by id
+   *
+   * @param id of the pool
+   */
   async getConfiguration(id) {
     const data = await this.requestInfo(`pools/${id}/configuration`);
     return data;
@@ -221,8 +268,15 @@ class Api {
   //===========================================================================================================
   // ========== Measurements:
   //===========================================================================================================
+  /**
+   * Get last measures of all types
+   *
+   * @param id of the pool
+   */
   async getLastMeasures(id) {
-    const data = await this.requestInfo(`pools/${id}/lastmeasures?types[]=temperature&types[]=ph&types[]=orp&types[]=salt&types[]=tds&types[]=battery&types[]=rssi`);
+    const data = await this.requestInfo(
+      `pools/${id}/lastmeasures?types[]=temperature&types[]=ph&types[]=orp&types[]=salt&types[]=tds&types[]=battery&types[]=rssi`
+    );
     for (const measure of data) {
       measure.value_time = new Date(measure.value_time);
     }
@@ -230,9 +284,10 @@ class Api {
   }
   /**
    * Get all measures of type for the last day / week / month
-   * @param id
-   * @param type
-   * @param period
+   *
+   * @param id of the pool
+   * @param type type of measurement
+   * @param period period of time
    */
   async getMeasures(id, type, period) {
     const data = await this.requestInfo(`pools/${id}/measure?
@@ -246,6 +301,11 @@ class Api {
   //===========================================================================================================
   // ========== Recommendations:
   //===========================================================================================================
+  /**
+   * Get all recommendations for a pool
+   *
+   * @param id of the pool
+   */
   async getRecommendations(id) {
     const data = await this.requestInfo(`pools/${id}/recommendations`);
     for (const recommendation of data) {
@@ -255,6 +315,12 @@ class Api {
     }
     return data;
   }
+  /**
+   * mark a recommendation as done
+   *
+   * @param poolId id of the pool
+   * @param recommendationId id of the recommendation
+   */
   async validateRecommendation(poolId, recommendationId) {
     const response = await this.requestInfo(`pools/${poolId}/recommendations/${recommendationId}`, "put");
     return ["Done", "done", "DONE"].includes(response);
