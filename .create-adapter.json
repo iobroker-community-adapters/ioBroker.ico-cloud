@@ -42,6 +42,8 @@
     "license": "MIT License",
     "dependabot": "yes",
     "replay": "/home/achim/development/iobroker/ioBroker.ico-cloud/.create-adapter.json",
-    "creatorVersion": "2.1.1",
-    "adminUi": "json"
+    "creatorVersion": "2.6.5",
+    "adminUi": "html",
+    "nodeVersion": "20",
+    "i18n": "JSON"
 }

@@ -123,14 +123,17 @@
       "spa",
       "water"
     ],
-    "license": "MIT",
+    "licenseInformation": {
+      "type": "free",
+      "license": "MIT"
+    },
     "platform": "Javascript/Node.js",
-    "main": "build/main.js",
     "icon": "ico-cloud.png",
     "enabled": true,
     "extIcon": "https://raw.githubusercontent.com/iobroker-community-adapters/ioBroker.ico-cloud/main/admin/ico-cloud.png",
     "readme": "https://github.com/iobroker-community-adapters/ioBroker.ico-cloud/blob/main/README.md",
     "loglevel": "info",
+    "tier": 3,
     "mode": "schedule",
     "schedule": "59 * * * *",
     "allowInit": true,
@@ -138,16 +141,17 @@
     "compact": true,
     "connectionType": "cloud",
     "dataSource": "poll",
-    "materialize": true,
-    "eraseOnUpload": true,
-    "globalDependencies": [
-      {
-        "admin": ">=4.0.10"
-      }
-    ],
+    "adminUI": {
+      "config": "materialize"
+    },
     "dependencies": [
       {
-        "js-controller": ">=3.0.0"
+        "js-controller": ">=6.0.11"
+      }
+    ],
+    "globalDependencies": [
+      {
+        "admin": "7.0.23"
       }
     ]
   },

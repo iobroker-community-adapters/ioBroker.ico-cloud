@@ -2,23 +2,14 @@ module.exports = {
     root: true, // Don't look outside this project for inherited configs
     parser: '@typescript-eslint/parser', // Specifies the ESLint parser
     parserOptions: {
-        ecmaVersion: 2018, // Allows for the parsing of modern ECMAScript features
+        ecmaVersion: 'latest', // Allows for the parsing of modern ECMAScript features
         sourceType: 'module', // Allows for the use of imports
         project: './tsconfig.json',
-        ecmaFeatures: {
-            jsx: true,
-        },
     },
     extends: [
         'plugin:@typescript-eslint/recommended', // Uses the recommended rules from the @typescript-eslint/eslint-plugin
-        'plugin:react/recommended', // Supports React JSX
     ],
-    plugins: ['react'],
-    settings: {
-        react: {
-            version: 'detect',
-        },
-    },
+    plugins: [],
     rules: {
         'indent': 'off',
         '@typescript-eslint/indent': [
@@ -69,7 +60,7 @@ module.exports = {
     },
     overrides: [
         {
-            files: ['*.test.ts', '*.tsx'],
+            files: ['*.test.ts'],
             rules: {
                 '@typescript-eslint/explicit-function-return-type': 'off',
             },
