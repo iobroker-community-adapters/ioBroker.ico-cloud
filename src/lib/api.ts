@@ -291,7 +291,7 @@ export class Api {
             } else {
                 log.error(`${result.status} - ${JSON.stringify(result.data)}`);
             }
-        } catch (e: unknown) {
+        } catch (e: any) {
             if (axios.isAxiosError(e)) {
                 const response = (e as AxiosError).response || { status: 0, data: 'Unknown failure', headers: '' };
                 log.error(
