@@ -13,10 +13,10 @@
             },
             "icon": "auth",
             "command": "getOAuthStartLink",
-            "jsonData": "{\"redirect_uri_base\": \"${data._origin}\", ...}",
-            "label": "Authenticate with XXX",
+            "jsonData": "{\"redirectUriBase\": \"${data._origin}\", ...}",
+            "label": "Authenticate with Ondilo",
             "openUrl": true,
-            "window": "Login with XXX"
+            "window": "Login with Ondilo"
         }
     }
 }
