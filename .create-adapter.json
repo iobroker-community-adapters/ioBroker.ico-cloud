@@ -23,7 +23,7 @@
     "dataSource": "poll",
     "connectionIndicator": "no",
     "language": "TypeScript",
-    "adminReact": "yes",
+    "adminReact": "no",
     "tools": [
         "ESLint"
     ],
@@ -42,5 +42,6 @@
     "license": "MIT License",
     "dependabot": "yes",
     "replay": "/home/achim/development/iobroker/ioBroker.ico-cloud/.create-adapter.json",
-    "creatorVersion": "2.1.1"
+    "creatorVersion": "2.1.1",
+    "adminUi": "json"
 }
