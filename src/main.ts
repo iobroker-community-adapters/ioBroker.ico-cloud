@@ -46,6 +46,7 @@ class IcoCloud extends utils.Adapter {
     private unloaded = false;
     private redirectURI = '';
     private oauthStateCode = '';
+    private sleeps: NodeJS.Timeout[] = [];
 
     public constructor(options: Partial<utils.AdapterOptions> = {}) {
         super({
@@ -61,9 +62,10 @@ class IcoCloud extends utils.Adapter {
 
     private async sleep(ms: number): Promise<void> {
         return new Promise(resolve => {
-            setTimeout(() => {
-                !this.unloaded && resolve();
-            }, ms);
+            this.sleeps.push(setTimeout(() => {
+                    !this.unloaded && resolve();
+                }, ms),
+            );
         });
     }
 
@@ -376,6 +378,9 @@ class IcoCloud extends utils.Adapter {
     private onUnload(callback: () => void): void {
         try {
             this.unloaded = true;
+            for (const sleep of this.sleeps) {
+                clearTimeout(sleep);
+            }
             callback();
         } catch (e: any) {
             console.error('Error during unloading:', e);

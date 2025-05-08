@@ -9,6 +9,7 @@
   "homepage": "https://github.com/iobroker-community-adapters/ioBroker.ico-cloud",
   "license": "MIT",
   "keywords": [
+    "iobroker",
     "pool",
     "ico",
     "ondilo",
