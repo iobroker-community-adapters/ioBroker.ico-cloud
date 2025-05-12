@@ -31,6 +31,9 @@ Icon and name of ICO and Ondilo are property of Ondilo.
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+* (Garfonso) ignore done recommendations
+
 ### 2.0.1 (2025-05-12)
 * (Garfonso) added support for recommendations
 * (Garfonso) store refreshed token properly, might solve issues with missed measurements.
