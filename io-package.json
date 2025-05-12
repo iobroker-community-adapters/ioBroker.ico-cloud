@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "ico-cloud",
-    "version": "2.0.0",
+    "version": "2.0.1",
     "news": {
+      "2.0.1": {
+        "en": "added support for recommendations\nstore refreshed token properly, might solve issues with missed measurements.\nimproved responsiveness of config UI",
+        "de": "unterstützung für empfehlungen\nspeichern neue tokens richtig, könnte probleme mit verpassten messungen lösen.\nverbesserung der responsiveness der Konfigurations UI",
+        "ru": "добавлена поддержка рекомендаций\nправильно хранить обновленный токен, может решить проблемы с пропущенными измерениями.\nулучшенная отзывчивость Config UI",
+        "pt": "apoio adicional para recomendações\narmazenar token atualizado corretamente, pode resolver problemas com medições perdidas.\nmelhoria da capacidade de resposta de UI de configuração",
+        "nl": "extra steun voor aanbevelingen\nop te slaan vernieuwd token goed, kunnen problemen met gemiste metingen oplossen.\nverbeterde respons van config UI",
+        "fr": "appui supplémentaire aux recommandations\nstocker le jeton rafraîchi correctement, pourrait résoudre les problèmes avec les mesures manquées.\namélioration de la réactivité de config UI",
+        "it": "sostegno aggiunto alle raccomandazioni\nmemorizzare il token rinfrescato correttamente, potrebbe risolvere i problemi con le misure mancate.\nmigliorata reattività di configurazione UI",
+        "es": "apoyo añadido a las recomendaciones\nalmacenar token refrescado correctamente, podría resolver problemas con mediciones perdidas.\nmejora de la capacidad de respuesta de config UI",
+        "pl": "dodane wsparcie dla zaleceń\nsklep odświeżony token prawidłowo, może rozwiązać problemy z pominiętych pomiarów.\npoprawa reakcji interfejsu konfiguracyjnego",
+        "uk": "додана підтримка рекомендацій\nмагазин освіжаючих токени правильно, може вирішувати питання з пропущеними вимірюваннями.\nполіпшена чуйність конфігурації UI",
+        "zh-cn": "增加对建议的支持\n正确存储刷新符号,可能会用错失的测量方法解决问题.\n提高配置UI的响应能力"
+      },
       "2.0.0": {
         "en": "rewrote config UI\nlogin works again\nbreaking: requires node 20 or higher",
         "de": "rewroting config UI\nanmeldung funktioniert wieder\nbreaking: braucht jetzt node 20 oder höher",
@@ -80,19 +93,6 @@
         "pl": "dodaj niezbędną zależność administratora.\nNie używaj nieznanych ról.",
         "zh-cn": "添加必要的管理员依赖项。\n不要使用未知角色。",
         "uk": "Додайте необхідну залежність адміністратора.\nНе використовуйте невідомі ролі."
-      },
-      "0.0.4": {
-        "en": "change default poll interfal to one hour, because it seems no more measurements are done.\nfixed issue in polling",
-        "de": "Ändern Sie das Standard-Polling-Interfal auf eine Stunde, da anscheinend keine Messungen mehr durchgeführt werden.\nProblem bei Umfragen behoben",
-        "ru": "измените интервал опроса по умолчанию на один час, потому что кажется, что измерения больше не проводятся.\nисправлена проблема в опросе",
-        "pt": "mude o intervalo de pesquisa padrão para uma hora, porque parece que não foram feitas mais medições.\nproblema corrigido na votação",
-        "nl": "verander standaard poll interfal naar één uur, omdat het lijkt alsof er geen metingen meer worden gedaan.\nopgelost probleem in polling",
-        "fr": "changez l'intervalle de sondage par défaut à une heure, car il semble qu'aucune autre mesure ne soit effectuée.\nproblème résolu dans les sondages",
-        "it": "cambia l'intervallo di polling predefinito a un'ora, perché sembra che non vengano più eseguite misurazioni.\nproblema risolto nei sondaggi",
-        "es": "cambie el intervalo de sondeo predeterminado a una hora, porque parece que no se realizan más mediciones.\nproblema solucionado en la votación",
-        "pl": "zmień domyślny interfal sondy na jedną godzinę, ponieważ wydaje się, że nie są wykonywane żadne dalsze pomiary.\nnaprawiony problem w ankietach",
-        "zh-cn": "将默认轮询间隔更改为一小时，因为似乎不再进行测量。\n固定投票问题",
-        "uk": "Змініть опитування за замовчуванням міжфалій на одну годину, оскільки, здається, більше не проводиться вимірювань.\nВиправлена ​​проблема в опитуванні"
       }
     },
     "titleLang": {
