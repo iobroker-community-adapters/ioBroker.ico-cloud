@@ -380,7 +380,16 @@ class IcoCloud extends utils.Adapter {
             });
             let lastRecommendation;
             //create and update states
+            const recommendationsStored = [];
             for (const recommendation of recommendations) {
+                if (Date.now() < recommendation.deadline.getTime() && recommendation.status !== 'ok') {
+                    recommendationsStored.push(recommendation.id);
+                } else {
+                    this.log.debug(
+                        `Recommendation ignored, because deadline is over or status is ok: ${Date.now() >= recommendation.deadline.getTime()} - ${recommendation.status} - ${JSON.stringify(recommendation)}`,
+                    );
+                    continue;
+                }
                 await this.setObjectNotExistsAsync(`${device.uuid}.recommendations.${recommendation.id}`, {
                     type: 'state',
                     common: {
@@ -420,6 +429,12 @@ class IcoCloud extends utils.Adapter {
                     lastRecommendation.title,
                     true,
                 );
+            } else {
+                //no recommendations -> delete state of lastRecommendation object.
+                const lastRecThere = await this.objectExists(`${device.uuid}.recommendations.lastRecommendation`);
+                if (lastRecThere) {
+                    await this.delStateAsync(`${device.uuid}.recommendations.lastRecommendation`);
+                }
             }
 
             // clean up old recommendation objects:
@@ -428,8 +443,8 @@ class IcoCloud extends utils.Adapter {
                 let found = false;
                 if (!id.includes('lastRecommendation')) {
                     const recId = Number(id.split('.').pop());
-                    for (const recommendation of recommendations) {
-                        if (recommendation.id === recId) {
+                    for (const recommendation of recommendationsStored) {
+                        if (recommendation === recId) {
                             found = true;
                             break;
                         }

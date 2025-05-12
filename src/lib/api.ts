@@ -134,7 +134,7 @@ export interface Recommendation {
     /**
      * Status of recommendation
      */
-    status: 'waiting'; //not sure what else..?
+    status: 'waiting' | 'ok'; //not sure what else..?
     /**
      * Deadline of recommendation
      */
