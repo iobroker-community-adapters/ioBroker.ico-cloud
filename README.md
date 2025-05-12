@@ -33,6 +33,7 @@ Icon and name of ICO and Ondilo are property of Ondilo.
 -->
 ### **WORK IN PROGRESS**
 * (Garfonso) added support for recommendations
+* (Garfonso) store refreshed token properly, might solve issues with missed measurements.
 * (Garfonso) improved responsiveness of config UI
 
 ### 2.0.0 (2025-05-08)
