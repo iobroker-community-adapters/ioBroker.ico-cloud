@@ -88,7 +88,8 @@ class IcoCloud extends utils.Adapter {
       this.api = new import_api.Api({
         accessToken: this.config.accessToken,
         refreshToken: this.config.refreshToken,
-        log: this.log
+        log: this.log,
+        storeNewTokens: this.storeNewTokens.bind(this)
       });
       this.log.debug("updating devices.");
       try {
@@ -332,11 +333,84 @@ class IcoCloud extends utils.Adapter {
       this.log.warn(`Could not get measurements: ${e}`);
     }
   }
+  /**
+   * Update recommendations for device.
+   *
+   * @param device - device to update
+   */
+  async updateRecommendationsOfDevice(device) {
+    try {
+      const recommendations = await this.api.getRecommendations(device.poolId);
+      await this.setObjectNotExistsAsync(`${device.uuid}.recommendations`, {
+        type: "channel",
+        common: {
+          name: "Recommendations"
+        },
+        native: {}
+      });
+      let lastRecommendation;
+      for (const recommendation of recommendations) {
+        await this.setObjectNotExistsAsync(`${device.uuid}.recommendations.${recommendation.id}`, {
+          type: "state",
+          common: {
+            name: recommendation.id.toString(10),
+            type: "string",
+            role: "text",
+            read: true,
+            write: false
+          },
+          native: {}
+        });
+        await this.setState(`${device.uuid}.recommendations.${recommendation.id}`, recommendation.title, true);
+        if (!lastRecommendation || recommendation.updated_at.getTime() > lastRecommendation.updated_at.getTime()) {
+          lastRecommendation = recommendation;
+        }
+      }
+      if (lastRecommendation) {
+        await this.setObjectNotExistsAsync(`${device.uuid}.recommendations.lastRecommendation`, {
+          type: "state",
+          common: {
+            name: "Last recommendation",
+            type: "string",
+            role: "text",
+            read: true,
+            write: false
+          },
+          native: {}
+        });
+        await this.setState(
+          `${device.uuid}.recommendations.lastRecommendation`,
+          lastRecommendation.title,
+          true
+        );
+      }
+      const recommendationObjects = await this.getStatesAsync(`${device.uuid}.recommendations.*`);
+      for (const id of Object.keys(recommendationObjects)) {
+        let found = false;
+        if (!id.includes("lastRecommendation")) {
+          const recId = Number(id.split(".").pop());
+          for (const recommendation of recommendations) {
+            if (recommendation.id === recId) {
+              found = true;
+              break;
+            }
+          }
+          if (!found) {
+            this.log.debug(`Deleting recommendation ${id}`);
+            await this.delObjectAsync(id, { recursive: true });
+          }
+        }
+      }
+    } catch (e) {
+      this.log.warn(`Could not get recommendations: ${e}`);
+    }
+  }
   async poll() {
     this.log.debug("Polling");
     const promises = [];
     for (const device of this.devices) {
       promises.push(this.updateMeasurementsOfDevice(device));
+      promises.push(this.updateRecommendationsOfDevice(device));
     }
     await Promise.all(promises);
     this.log.debug(`Update done.`);
@@ -384,6 +458,25 @@ class IcoCloud extends utils.Adapter {
   //         this.log.info(`state ${id} deleted`);
   //     }
   // }
+  /**
+   * Store new tokens in adapter config.
+   *
+   * @param accessToken - access token
+   * @param refreshToken - refresh token
+   * @param noAdapterRestart - if true, don't restart adapter otherwise writing the config object will trigger a restart.
+   */
+  async storeNewTokens(accessToken, refreshToken, noAdapterRestart = false) {
+    var _a;
+    const systemConfig = await this.getForeignObjectAsync("system.config");
+    const secrect = ((_a = systemConfig == null ? void 0 : systemConfig.native) == null ? void 0 : _a.secret) || "RJaeBLRPwvPfh5O";
+    const instance = await this.getForeignObjectAsync(`system.adapter.${this.namespace}`);
+    instance.native.accessToken = accessToken ? encryptDecrypt(secrect, accessToken) : instance.native.accessToken;
+    instance.native.refreshToken = refreshToken ? encryptDecrypt(secrect, refreshToken) : instance.native.refreshToken;
+    if (!noAdapterRestart) {
+      await this.setForeignObject(`system.adapter.${this.namespace}`, instance);
+    }
+    return instance;
+  }
   // If you need to accept messages in your adapter, uncomment the following block and the corresponding line in the constructor.
   /**
    * Some message was sent to this instance over message box. Used by email, pushover, text2speech, ...
@@ -392,7 +485,6 @@ class IcoCloud extends utils.Adapter {
    * @param obj - message object
    */
   async onMessage(obj) {
-    var _a;
     if (typeof obj === "object" && obj.message) {
       this.log.debug(`Message: ${JSON.stringify(obj)}`);
       if (obj.command === "getOAuthStartLink") {
@@ -412,11 +504,7 @@ class IcoCloud extends utils.Adapter {
           const result = await import_api.Api.getToken(obj.message.code, this.redirectURI, this.log);
           if (obj.callback) {
             if (result) {
-              const systemConfig = await this.getForeignObjectAsync("system.config");
-              const secrect = ((_a = systemConfig == null ? void 0 : systemConfig.native) == null ? void 0 : _a.secret) || "RJaeBLRPwvPfh5O";
-              const instance = await this.getForeignObjectAsync(`system.adapter.${this.namespace}`);
-              instance.native.accessToken = encryptDecrypt(secrect, result.accessToken);
-              instance.native.refreshToken = encryptDecrypt(secrect, result.refreshToken);
+              const instance = await this.storeNewTokens(result.accessToken, result.refreshToken, true);
               this.sendTo(
                 obj.from,
                 obj.command,
