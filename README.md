@@ -31,6 +31,10 @@ Icon and name of ICO and Ondilo are property of Ondilo.
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+* (Garfonso) added support for recommendations
+* (Garfonso) improved responsiveness of config UI
+
 ### 2.0.0 (2025-05-08)
 * (Garfonso) rewrote config UI
 * (Garfonso) login works again
