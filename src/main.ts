@@ -412,6 +412,20 @@ class IcoCloud extends utils.Adapter {
                 }
             }
 
+            //json state:
+            await this.setObjectNotExistsAsync(`${device.uuid}.recommendations.json`, {
+                type: 'state',
+                common: {
+                    name: 'Recommendations',
+                    type: 'string',
+                    role: 'json',
+                    read: true,
+                    write: false,
+                },
+                native: {},
+            });
+            await this.setState(`${device.uuid}.recommendations.json`, JSON.stringify(recommendations, null, 2), true);
+
             if (lastRecommendation) {
                 await this.setObjectNotExistsAsync(`${device.uuid}.recommendations.lastRecommendation`, {
                     type: 'state',
@@ -441,7 +455,7 @@ class IcoCloud extends utils.Adapter {
             const recommendationObjects = await this.getStatesAsync(`${device.uuid}.recommendations.*`);
             for (const id of Object.keys(recommendationObjects)) {
                 let found = false;
-                if (!id.includes('lastRecommendation')) {
+                if (!id.includes('lastRecommendation') && !id.includes('json')) {
                     const recId = Number(id.split('.').pop());
                     for (const recommendation of recommendationsStored) {
                         if (recommendation === recId) {

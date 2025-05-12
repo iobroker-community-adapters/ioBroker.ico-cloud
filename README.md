@@ -31,6 +31,9 @@ Icon and name of ICO and Ondilo are property of Ondilo.
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+* (Garfonso) add json state for recommendations
+
 ### 2.0.2 (2025-05-12)
 * (Garfonso) ignore done recommendations
 
