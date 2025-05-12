@@ -12,6 +12,7 @@ import { URLSearchParams } from 'node:url';
 //maximum 30 requests per hour
 //api says that measurements are taken every hour (?)
 
+//Api Documentation: https://interop.ondilo.com/docs/api/customer/v1/
 const baseURL = 'https://interop.ondilo.com/';
 const tokenURL = `${baseURL}oauth2/token`;
 const client_id = 'customer_api';
@@ -147,6 +148,7 @@ export class Api {
     private accessToken: string;
     private refreshToken: string;
     private log: ioBroker.Logger;
+    private readonly storeNewTokens: (accessToken: string, refreshToken: string) => Promise<any>;
 
     /**
      * Constructor
@@ -155,15 +157,23 @@ export class Api {
      * @param options.refreshToken - refresh token
      * @param options.accessToken - access token
      * @param options.log - logger
+     * @param options.storeNewTokens - function to store new tokens
      */
-    public constructor(options: { refreshToken: string; accessToken: string; log: ioBroker.Logger }) {
+    public constructor(options: {
+        refreshToken: string;
+        accessToken: string;
+        log: ioBroker.Logger;
+        storeNewTokens: (accessToken: string, refreshToken: string) => Promise<any>;
+    }) {
         this.accessToken = options.accessToken;
         this.refreshToken = options.refreshToken;
         this.log = options.log;
+        this.storeNewTokens = options.storeNewTokens;
     }
 
     private async doRefreshToken(): Promise<boolean> {
         try {
+            this.log.debug('Refreshing token');
             const response = await axios.post(
                 tokenURL,
                 new URLSearchParams({
@@ -181,11 +191,12 @@ export class Api {
             if (response.status === 200) {
                 if (response.data && response.data.access_token) {
                     this.accessToken = response.data.access_token;
+                    await this.storeNewTokens(response.data.access_token, response.data.refresh_token);
                     return true;
                 }
-                throw new Error(`No toke in response. ${JSON.stringify(response.data)}`);
+                this.log.error(`No token in response. ${JSON.stringify(response.data)}`);
             } else {
-                throw new Error(`${response.status} - ${JSON.stringify(response.data)}`);
+                this.log.error(`Wrong status code: ${response.status} - ${JSON.stringify(response.data)}`);
             }
         } catch (e: any) {
             if (axios.isAxiosError(e)) {
@@ -196,6 +207,7 @@ export class Api {
                 throw new Error(`Could not update token: ${e}`);
             }
         }
+        return false;
     }
 
     private async requestInfo(

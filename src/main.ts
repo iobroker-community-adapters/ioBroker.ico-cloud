@@ -104,6 +104,7 @@ class IcoCloud extends utils.Adapter {
                 accessToken: this.config.accessToken,
                 refreshToken: this.config.refreshToken,
                 log: this.log,
+                storeNewTokens: this.storeNewTokens.bind(this),
             });
 
             this.log.debug('updating devices.');
@@ -417,6 +418,35 @@ class IcoCloud extends utils.Adapter {
     //     }
     // }
 
+    /**
+     * Store new tokens in adapter config.
+     *
+     * @param accessToken - access token
+     * @param refreshToken - refresh token
+     * @param noAdapterRestart - if true, don't restart adapter otherwise writing the config object will trigger a restart.
+     */
+    async storeNewTokens(
+        accessToken: string | undefined,
+        refreshToken: string | undefined,
+        noAdapterRestart = false,
+    ): Promise<ioBroker.InstanceObject> {
+        //get secret for encryption:
+        const systemConfig = await this.getForeignObjectAsync('system.config');
+        const secrect = systemConfig?.native?.secret || 'RJaeBLRPwvPfh5O';
+        const instance = await this.getForeignObjectAsync(`system.adapter.${this.namespace}`);
+        //encrypt tokens:
+        instance!.native.accessToken = accessToken
+            ? encryptDecrypt(secrect, accessToken)
+            : instance!.native.accessToken;
+        instance!.native.refreshToken = refreshToken
+            ? encryptDecrypt(secrect, refreshToken)
+            : instance!.native.refreshToken;
+        if (!noAdapterRestart) {
+            await this.setForeignObject(`system.adapter.${this.namespace}`, instance!);
+        }
+        return instance!;
+    }
+
     // If you need to accept messages in your adapter, uncomment the following block and the corresponding line in the constructor.
     /**
      * Some message was sent to this instance over message box. Used by email, pushover, text2speech, ...
@@ -445,22 +475,14 @@ class IcoCloud extends utils.Adapter {
                     const result = await Api.getToken(obj.message.code, this.redirectURI, this.log);
                     if (obj.callback) {
                         if (result) {
-                            //get secret for decryption:
-                            const systemConfig = await this.getForeignObjectAsync('system.config');
-                            const secrect = systemConfig?.native?.secret || 'RJaeBLRPwvPfh5O';
-                            const instance = await this.getForeignObjectAsync(`system.adapter.${this.namespace}`);
-                            //encrypt tokens:
-                            instance!.native.accessToken = encryptDecrypt(secrect, result.accessToken!);
-                            instance!.native.refreshToken = encryptDecrypt(secrect, result.refreshToken!);
-                            //this.log.debug( `sending to admin: ${JSON.stringify(result)}`);
-                            //sadly this does not (yet) store the tokens in the configuration...
+                            const instance = await this.storeNewTokens(result.accessToken, result.refreshToken, true);
                             this.sendTo(
                                 obj.from,
                                 obj.command,
                                 { result: 'loginSuccessMessage', native: result, saveConfig: true },
                                 obj.callback,
                             );
-                            await this.setForeignObject(`system.adapter.${this.namespace}`, instance!);
+                            await this.setForeignObject(`system.adapter.${this.namespace}`, instance);
                         } else {
                             this.sendTo(obj.from, obj.command, { error: 'loginErrorMessage' }, obj.callback);
                         }
