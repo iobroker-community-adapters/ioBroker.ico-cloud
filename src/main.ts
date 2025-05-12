@@ -362,11 +362,96 @@ class IcoCloud extends utils.Adapter {
         }
     }
 
+    /**
+     * Update recommendations for device.
+     *
+     * @param device - device to update
+     */
+    private async updateRecommendationsOfDevice(device: myDevice): Promise<void> {
+        try {
+            const recommendations = await this.api!.getRecommendations(device.poolId);
+            //make sure channel exists.
+            await this.setObjectNotExistsAsync(`${device.uuid}.recommendations`, {
+                type: 'channel',
+                common: {
+                    name: 'Recommendations',
+                },
+                native: {},
+            });
+            let lastRecommendation;
+            //create and update states
+            for (const recommendation of recommendations) {
+                await this.setObjectNotExistsAsync(`${device.uuid}.recommendations.${recommendation.id}`, {
+                    type: 'state',
+                    common: {
+                        name: recommendation.id.toString(10),
+                        type: 'string',
+                        role: 'text',
+                        read: true,
+                        write: false,
+                    },
+                    native: {},
+                });
+                await this.setState(`${device.uuid}.recommendations.${recommendation.id}`, recommendation.title, true);
+
+                //keep track of latestRecommendation
+                if (
+                    !lastRecommendation ||
+                    recommendation.updated_at.getTime() > lastRecommendation.updated_at.getTime()
+                ) {
+                    lastRecommendation = recommendation;
+                }
+            }
+
+            if (lastRecommendation) {
+                await this.setObjectNotExistsAsync(`${device.uuid}.recommendations.lastRecommendation`, {
+                    type: 'state',
+                    common: {
+                        name: 'Last recommendation',
+                        type: 'string',
+                        role: 'text',
+                        read: true,
+                        write: false,
+                    },
+                    native: {},
+                });
+                await this.setState(
+                    `${device.uuid}.recommendations.lastRecommendation`,
+                    lastRecommendation.title,
+                    true,
+                );
+            }
+
+            // clean up old recommendation objects:
+            const recommendationObjects = await this.getStatesAsync(`${device.uuid}.recommendations.*`);
+            for (const id of Object.keys(recommendationObjects)) {
+                let found = false;
+                if (!id.includes('lastRecommendation')) {
+                    const recId = Number(id.split('.').pop());
+                    for (const recommendation of recommendations) {
+                        if (recommendation.id === recId) {
+                            found = true;
+                            break;
+                        }
+                    }
+
+                    if (!found) {
+                        this.log.debug(`Deleting recommendation ${id}`);
+                        await this.delObjectAsync(id, { recursive: true });
+                    }
+                }
+            }
+        } catch (e: any) {
+            this.log.warn(`Could not get recommendations: ${e}`);
+        }
+    }
+
     private async poll(): Promise<void> {
         this.log.debug('Polling');
         const promises: Array<Promise<any>> = [];
         for (const device of this.devices) {
             promises.push(this.updateMeasurementsOfDevice(device));
+            promises.push(this.updateRecommendationsOfDevice(device));
         }
         await Promise.all(promises);
         this.log.debug(`Update done.`);
