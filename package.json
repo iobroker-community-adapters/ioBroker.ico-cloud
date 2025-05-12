@@ -1,6 +1,6 @@
 {
   "name": "iobroker.ico-cloud",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "ICO Poolsensor allow to monitor the state of the water in your pool and recommends actions to take.",
   "author": {
     "name": "Garfonso",

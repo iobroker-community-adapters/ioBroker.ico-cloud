@@ -355,7 +355,7 @@ class IcoCloud extends utils.Adapter {
           recommendationsStored.push(recommendation.id);
         } else {
           this.log.debug(
-            `Recommendation ignored, because deadline is over or status is ok: ${Date.now() < recommendation.deadline.getTime()} - ${recommendation.status} - ${JSON.stringify(recommendation)}`
+            `Recommendation ignored, because deadline is over or status is ok: ${Date.now() >= recommendation.deadline.getTime()} - ${recommendation.status} - ${JSON.stringify(recommendation)}`
           );
           continue;
         }
