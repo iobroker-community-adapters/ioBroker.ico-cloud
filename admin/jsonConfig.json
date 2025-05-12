@@ -10,7 +10,8 @@
             "xs": 12,
             "sm": 12,
             "md": 12,
-            "lg": 12
+            "lg": 12,
+            "xl": 12
         },
         "_startAdapterMessage": {
             "type": "staticText",
@@ -20,7 +21,8 @@
             "xs": 12,
             "sm": 12,
             "md": 12,
-            "lg": 12
+            "lg": 12,
+            "xl": 12
         },
         "_authenticate": {
             "newLine": true,
@@ -42,7 +44,8 @@
             "xs": 12,
             "sm": 8,
             "md": 6,
-            "lg": 4
+            "lg": 4,
+            "xl": 3
         },
         "_allOkMessage": {
             "type": "staticText",
@@ -52,7 +55,8 @@
             "xs": 12,
             "sm": 12,
             "md": 12,
-            "lg": 12
+            "lg": 12,
+            "xl": 12
         }
     }
 }
