@@ -386,11 +386,7 @@ class IcoCloud extends utils.Adapter {
         },
         native: {}
       });
-      await this.setState(
-        `${device.uuid}.recommendations.json`,
-        JSON.stringify(recommendations, null, 2),
-        true
-      );
+      await this.setState(`${device.uuid}.recommendations.json`, JSON.stringify(recommendations, null, 2), true);
       if (lastRecommendation) {
         await this.setObjectNotExistsAsync(`${device.uuid}.recommendations.lastRecommendation`, {
           type: "state",

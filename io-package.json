@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "ico-cloud",
-    "version": "2.0.2",
+    "version": "2.0.3",
     "news": {
+      "2.0.3": {
+        "en": "add json state for recommendations",
+        "de": "json state für empfehlungen hinzugefügt",
+        "ru": "json state для рекомендаций",
+        "pt": "adicionar estado json para recomendações",
+        "nl": "json state toevoegen voor aanbevelingen",
+        "fr": "ajouter l'état json pour les recommandations",
+        "it": "aggiungere json stato per raccomandazioni",
+        "es": "añadir json state for recommendations",
+        "pl": "dodaj stan json do zaleceń",
+        "uk": "додати джсоновий стан рекомендацій",
+        "zh-cn": "为建议添加 json 状态"
+      },
       "2.0.2": {
         "en": "ignore done recommendations",
         "de": "ignoriere empfehlungen, die erledigt sind",
@@ -80,19 +93,6 @@
         "pl": "wymagania i administracyjne.",
         "zh-cn": "更加依赖和管理障碍。.",
         "uk": "Більше залежності та адміністративні речі."
-      },
-      "0.0.6": {
-        "en": "dependencies & updates",
-        "de": "abhängigkeiten & updates",
-        "ru": "зависимости и обновления",
-        "pt": "dependências e atualizações",
-        "nl": "afhankelijkheid",
-        "fr": "dépendances et mises à jour",
-        "it": "dipendenze e aggiornamenti",
-        "es": "actualizaciones de las dependencias",
-        "pl": "zależności i aktualizacji",
-        "zh-cn": "依赖和更新",
-        "uk": "залежності та оновлення"
       }
     },
     "titleLang": {
