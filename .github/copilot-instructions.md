@@ -58,7 +58,7 @@ All commands are very fast due to ESBuild:
 - `src/lib/api.ts` -- Ondilo cloud API client with OAuth2 handling
 - `admin/` -- Admin UI configuration and assets
 - `admin/jsonConfig.json` -- JSON-based configuration UI definition
-- `build/` -- Compiled JavaScript output (generated, not committed)
+- `build/` -- Compiled JavaScript output (committed to allow direct GitHub installs)
 - `test/` -- Mocha test files and configuration
 - `io-package.json` -- ioBroker adapter metadata and configuration
 - `package.json` -- Node.js project configuration
@@ -74,15 +74,15 @@ All commands are very fast due to ESBuild:
 ### Development Workflow
 1. Make changes to TypeScript files in `src/`
 2. Run `npm run build` to compile
-3. Run `npm test` to verify tests pass
-4. Run `npm run lint` to check code style
+3. Run `npm run lint` to check code style
+4. Run `npm test` to verify tests pass
 5. Use `npm run watch` during active development for automatic rebuilds
 
 ### Adding New Features
 - Add TypeScript code in `src/` directory
 - Update tests in corresponding `.test.ts` files
 - Update translations in `admin/i18n/` if adding user-facing text
-- Ensure `npm run build && npm test && npm run lint` passes
+- Ensure `npm run build && npm run lint && npm test` passes
 
 ### Working with the API
 - All Ondilo API interactions are in `src/lib/api.ts`
