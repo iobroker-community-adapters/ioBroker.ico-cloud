@@ -122,7 +122,8 @@
       "uk": "Датчик басейну ICO дозволяє стежити за станом та температурою води у вашому басейні та рекомендує вжити заходів."
     },
     "authors": [
-      "Garfonso <garfonso@mobo.info>"
+      "Garfonso <garfonso@mobo.info>",
+      "iobroker-community-adapters <iobroker-community-adapters@gmx.de>"
     ],
     "keywords": [
       "pool",
