@@ -11,7 +11,7 @@ import * as utils from '@iobroker/adapter-core';
 import { Api, type PossibleTypes } from './lib/api';
 
 // Load your modules here, e.g.:
-// import * as fs from "fs";
+// import * as fs from "node:fs";
 
 interface myDevice {
     poolId: number;
